@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Guides the AI assistant on using the Knowledge Graph Memory MCP for persistent, contextual recall.
+globs: "*"
+alwaysApply: true
+---
+
+- **MCP Server: knowledge_graph_memory**
+    - **Purpose:** To provide persistent memory using a local knowledge graph for users, projects, preferences, and past discussions.
+    - **When to Use:**
+        - User provides specific information to remember (e.g., "Remember I prefer Python for backend").
+        - Storing key project decisions, architectural choices, user preferences.
+        - Tracking important project entities (libraries, stakeholders, APIs).
+        - Recalling previously stored information to enhance current responses.
+        - Periodically, to consolidate important facts from a long interaction.
+    - **Core Concepts:**
+        - **Entities:** Nodes (e.g., "user:Reid", "project:ChatbotPhase1"). Have `name` (unique ID), `entityType`, `observations`.
+        - **Relations:** Directed connections (e.g., "user:Reid" `prefers` "language:Python"). Have `from`, `to`, `relationType`.
+        - **Observations:** Atomic string facts attached to an entity.
+    - **Memory Update Protocol (Information Gathering):**
+        - While conversing, be attentive to new information about 'default_user' (Reid) in these categories:
+            - Basic Identity (age, gender, location, job title, education, etc.)
+            - Behaviors (interests, habits, technical skills)
+            - Preferences (communication style, preferred language, tool choices, project goals)
+            - Goals (project goals, learning aspirations)
+            - Relationships (key collaborators, important contacts related to the project)
+    - **Memory Update Action (Storing Information):**
+        - If new, relevant, and persistent information is gathered, use the tools below to update memory.
+        - Create entities for recurring organizations, people, projects, and significant technical decisions or preferences.
+        - Connect entities using meaningful relations.
+        - Store specific facts as observations.
+        - **Memory Update Checkpoint:** After a user confirms completion of a multi-step task/subtask, or after significant new project details, user preferences, or key decisions are explicitly shared, the AI should pause and proactively review the recent interaction to determine if new entities, relations, or observations should be stored.
+    - **Key Tools & Parameters:**
+        - **`create_entities`**: `entities` (array of {`name`, `entityType`, `observations`[]})
+        - **`create_relations`**: `relations` (array of {`from`, `to`, `relationType`})
+        - **`add_observations`**: `observations` (array of {`entityName`, `contents`[]})
+        - **`delete_entities`**: `entityNames` (string[])
+        - **`delete_observations`**: `deletions` (array of {`entityName`, `observations`[]})
+        - **`delete_relations`**: `relations` (array of {`from`, `to`, `relationType`})
+        - **`read_graph`**: No input (Use sparingly).
+        - **`search_nodes`**: `query` (string) - Finds entities.
+        - **`open_nodes`**: `names` (string[]) - Retrieves specific entities and direct relations.
+    - **Key Principles for Effective Memory Use:**
+        - **Relevance for Us:** Store information important for *our future interactions* on this "Reusch AI Solutions" project or your general preferences for my assistance.
+        - **Atomicity:** Each observation a single fact.
+        - **Clear Naming:** Prefix entity names (e.g., `user:Reid`, `project:ChatbotPhase1`, `preference:PythonForBackend`).
+        - **Active Voice Relations:** (e.g., "user:Reid" `uses_os` "os:Windows11").
+        - **Incremental & Triggered Updates:** Add info as it becomes relevant, and specifically perform a memory review at designated checkpoints (see "Memory Update Checkpoint" above).
+        - **Proactive Retrieval:** Before complex queries/tasks, consider `search_nodes` or `open_nodes` for relevant stored context.
+        - **Categorize with `entityType`:** (e.g., "user_preference", "project_decision", "technical_constraint").
+        - **Avoid Trivial Info:** Don't store rapidly changing or unimportant details unless asked by the user directly to remember something specific and transient.

@@ -1,0 +1,39 @@
+---
+description: Provides rules for the Context7 MCP server, enabling the AI to fetch up-to-date documentation and code examples for software libraries, SDKs, and frameworks. Useful when generating or analyzing code involving external dependencies.
+globs: 
+alwaysApply: false
+---
+---
+description: Guides the AI assistant on using the Context7 MCP server for fetching up-to-date software library documentation.
+globs: ["*.py", "*.js", "*.jsx", "*.tsx", "*.ts", "*.html", "*.css"]  Apply when working with code files
+alwaysApply: true # Or set to false and trigger via prompt if preferred
+---
+
+- **MCP Server: context7**
+    - **Purpose of Context7 MCP Tools:**
+        - To provide access to the most current, version-specific documentation and code examples for software libraries, SDKs, and frameworks.
+        - Helps avoid issues with outdated information from AI training data.
+    - **When to Use Context7 Tools:**
+        - **Proactively for Accuracy:** Before generating code involving external libraries/APIs (e.g., Flask, React, LangChain, DeepSeek API client libraries, Vercel CLI, n8n nodes if coding custom ones).
+        - **User Request for Current Info:** When asked for up-to-date documentation or specific version info.
+        - **Resolving Uncertainty:** If unsure about library function usage, parameters, or best practices.
+        - **Investigating Errors:** If generated code results in errors potentially due to API changes.
+        - **If User Mentions "use context7":** A strong signal, but also decide proactively.
+    - **How to Use Context7 Tools (Two-Step Process):**
+        - **Step 1: Resolve Library ID**
+            - **Tool:** `mcp_context7_resolve-library-id`
+            - **Action:** Call first to convert common library name (e.g., "flask", "requests", "langchain") into a Context7-compatible ID.
+            - **Input:** `libraryName` (string).
+            - **Output Analysis:** Carefully evaluate matches based on name, description, code snippet count, and GitHub stars. Explain your choice of library ID.
+        - **Step 2: Get Library Documentation**
+            - **Tool:** `mcp_context7_get-library-docs`
+            - **Action:** Call *after* obtaining a `context7CompatibleLibraryID`.
+            - **Required Input:** `context7CompatibleLibraryID` (string).
+            - **Optional Inputs:** `topic` (string, highly recommended), `tokens` (float, default 5000).
+    - **Important Considerations for AI:**
+        - **Transparency:** Inform when using Context7 and why.
+        - **Tool Order:** Strictly `resolve-library-id` then `get-library-docs`.
+        - **Focus with `topic`:** Use it for targeted information.
+
+
+        - **Token Management:** Be mindful of the `tokens` parameter.

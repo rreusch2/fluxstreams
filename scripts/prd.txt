@@ -1,0 +1,140 @@
+# PRD.txt - Phase 1: AI Chatbot Foundation & Contact Backend for Reusch AI Solutions
+
+# Overview
+This document outlines the foundational requirements for developing and integrating an AI-powered chatbot onto the Contact Page of the Reusch AI Solutions website. This phase also includes creating a robust backend using n8n to handle contact form submissions and store them in Google Sheets. The primary goals for this phase are to:
+1. Establish the backend infrastructure for future AI capabilities.
+2. Implement a functional contact form system.
+3. Introduce a basic AI chatbot on the contact page that can engage users, answer very general queries using its inherent knowledge, and capture leads when it cannot answer or when a user requests contact.
+This initial setup will serve as a live demonstration of Reusch AI Solutions' technical direction and provide immediate utility through the contact form and basic chat interaction.
+
+# Core Features (Phase 1 Focus)
+
+1.  **Contact Form Backend (n8n & Google Sheets):**
+    * **What it does:** Securely processes submissions from the existing website contact form, sends email notifications, and logs submissions to a Google Sheet.
+    * **Why it's important:** Provides a reliable lead capture mechanism and organized storage of inquiries.
+    * **How it works (high-level):** Frontend contact form (on Vercel) submits data to an n8n webhook. The n8n workflow validates data, sends an email notification to a Reusch AI Solutions email address, and appends the submission details to a designated Google Sheet.
+    * **Note:** Specific Google Sheet setup (columns, sheet name) and email notification details will be configured manually by Reid later. This PRD focuses on the n8n workflow structure.
+
+2.  **AI Chatbot - Foundational Interaction (Python/Flask & DeepSeek API):**
+    * **What it does:** Provides a conversational interface on the contact page. For this phase, it will:
+        * Automatically greet users visiting the Contact Page with a friendly, conversational message outlining its general capabilities (e.g., "Hi there! I'm the AI assistant for Reusch AI Solutions. You can ask me about AI topics, our services in general, or I can help you get in touch with Reid. What's on your mind?").
+        * Engage in general conversation on AI topics, business, or provide general advice using the `deepseek-chat` model's inherent knowledge.
+        * Answer very basic, explicitly programmed questions about "Reusch AI Solutions" (e.g., "What is Reusch AI Solutions?").
+        * Implement safety guardrails: Decline to answer questions about its specific AI model, confidential website/business information, or illegal topics. It will respond with something like, "Sorry, I can't answer that specific question." or "I'm not able to provide details on that."
+        * Handle lead capture when it cannot answer appropriately or when the user indicates they want to contact someone: It will collect the user's name, email, and their message/query.
+    * **Why it's important:** Establishes the chatbot presence, showcases interactivity, provides a channel for initial engagement, and sets up the lead capture mechanism.
+    * **How it works (high-level):** A frontend chat widget on the Contact Page sends user messages to a Python/Flask backend API (deployed on Vercel). The backend:
+        * Manages conversation flow.
+        * Sends appropriate prompts (including system messages defining its persona, business name awareness, and safety guidelines) to the `deepseek-chat` API.
+        * Forwards lead capture details (name, email, query) to a specific n8n webhook, which then logs this to a *separate* Google Sheet (distinct from the contact form one, with appropriate columns for chat leads) and emails Reid.
+
+3.  **Knowledge Base & RAG Preparation (Out of Scope for THIS PRD's Task Generation):**
+    * **Note for Task-Master:** The creation of detailed business documents, FAQs, service descriptions for a full knowledge base, and the implementation of the RAG (Retrieval Augmented Generation) pipeline (embedding, vector search) are **deferred** to a later phase.
+    * For this phase, the chatbot will rely primarily on the `deepseek-chat` model's general knowledge and explicitly programmed basic information about "Reusch AI Solutions" within its system prompt or simple logic.
+
+# User Experience (Phase 1 - Chatbot on Contact Page)
+
+* **User Personas:**
+    * Potential Client (Small/Medium Business Owner)
+    * Tech-Savvy Individual
+* **Key User Flows (Chatbot - Phase 1):**
+    1.  User lands on Contact Page -> Chatbot automatically types out a friendly, conversational greeting, introducing itself and mentioning it can discuss AI, Reusch AI Solutions generally, or help the user get in touch/take a message.
+    2.  User asks a general question (AI, business, etc.) -> Chatbot responds using DeepSeek.
+    3.  User asks a question the chatbot is programmed not to answer (e.g., "What model are you?") -> Chatbot politely declines.
+    4.  Chatbot determines it cannot adequately answer or user wants to leave a message -> Chatbot initiates lead capture: "I can help you with that. Could I get your name and email so Reid can follow up?" followed by "And what's your message or question for him?".
+    5.  User asks to schedule a consultation -> Chatbot (for this phase) responds: "Reid can definitely help with that! Please leave your name, email, and a brief note on what you'd like to discuss, and he'll get back to you to schedule a time." (This then follows the lead capture flow).
+* **UI/UX Considerations (Chatbot):**
+    * Placement: Prominently on the Contact Page.
+    * Clear indication it's an AI assistant for "Reusch AI Solutions."
+    * Initial greeting should appear dynamically (e.g., simulated typing).
+    * Chatbot personality/tone: Conversational, casual, user-friendly, cool, but professional when discussing business or taking messages. Should use "Reusch AI Solutions" when appropriate.
+
+# Technical Architecture (Phase 1)
+
+* **System Components:**
+    1.  **Frontend:** Existing Reusch AI Solutions website (Vercel hosted). New chat widget/interface on Contact Page.
+    2.  **Backend API (Chatbot):** Python Flask application deployed as Vercel Serverless Functions.
+        * Endpoint: `/api/chatbot` (handles chat messages, lead capture forwarding to n8n).
+    3.  **Backend Workflow (Contact Form & Chat Lead Logging):** n8n (existing subscription).
+        * Webhook 1: For contact form submissions (emails Reid, logs to Google Sheet "ContactFormSubmissions").
+        * Webhook 2: For chatbot lead captures (emails Reid, logs to Google Sheet "ChatbotLeads").
+    4.  **LLM API:** DeepSeek API (using `deepseek-chat` model).
+    5.  **Data Storage (via n8n):**
+        * Google Sheet 1 ("ContactFormSubmissions"): Columns TBD by Reid later (e.g., Timestamp, Name, Email, Subject, Message).
+        * Google Sheet 2 ("ChatbotLeads"): Columns TBD by Reid later (e.g., Timestamp, Name, Email, UserQuery/Message, ChatbotContext).
+* **APIs and Integrations:**
+    * Frontend <-> Vercel Serverless Functions (Flask API for chatbot).
+    * Frontend <-> n8n Webhook (for contact form).
+    * Vercel Serverless Functions (Flask API) <-> DeepSeek API.
+    * Vercel Serverless Functions (Flask API) <-> n8n Webhook (for forwarding captured chat leads).
+    * n8n <-> Gmail/Email Service (for notifications).
+    * n8n <-> Google Sheets API.
+* **Infrastructure Requirements:**
+    * Vercel hosting for frontend and Python/Flask serverless functions.
+    * n8n account (existing).
+    * Google Workspace/Gmail for Google Sheets and email.
+    * Secure storage for DeepSeek API key and any n8n/Google API credentials (environment variables in Vercel and n8n).
+
+# Development Roadmap (Phase 1 Focus for this Task-Master Iteration)
+
+* **A. n8n Backend Setup (Contact Form & Chat Lead Receiver):**
+    1.  Design n8n workflow for Contact Form:
+        * Create Webhook trigger.
+        * Node to parse form data.
+        * Node to send email notification to Reid.
+        * Node to append data to Google Sheet ("ContactFormSubmissions").
+    2.  Design n8n workflow for Chatbot Lead Capture:
+        * Create Webhook trigger.
+        * Node to parse lead data (name, email, message from chatbot).
+        * Node to send email notification to Reid.
+        * Node to append data to Google Sheet ("ChatbotLeads").
+* **B. Python/Flask Backend Setup (Chatbot API Core on Vercel):**
+    1.  Set up basic Flask application structure suitable for Vercel Serverless Functions.
+    2.  Create `/api/chatbot` endpoint:
+        * Accept user messages.
+        * Securely load and use DeepSeek API key.
+        * Implement logic to construct initial system prompts (defining persona, business name "Reusch AI Solutions", safety guidelines/topics to avoid).
+        * Call DeepSeek API (`deepseek-chat` model) with user message and system prompt.
+        * Implement logic for lead capture: If a certain intent is detected or if the chatbot is "stuck", formulate a request for user name/email/message.
+        * If lead information is captured, make an HTTP POST request to the designated n8n webhook (from A.2) to pass this data.
+        * Return DeepSeek's (or lead capture status) response to the frontend.
+        * Implement basic error handling for DeepSeek API calls.
+* **C. Frontend Integration (Chatbot on Contact Page):**
+    1.  Design and implement a simple, functional chat widget UI specifically for the Contact Page.
+    2.  Implement logic for the chatbot's automatic greeting message upon page load (with simulated typing effect).
+    3.  Connect chat widget to send messages to the `/api/chatbot` backend endpoint and display responses.
+    4.  Ensure the existing frontend contact form is configured to submit its data to the n8n webhook URL (from A.1).
+* **D. Deployment & Testing (Phase 1):**
+    1.  Deploy Flask backend (as Vercel Serverless Functions).
+    2.  Configure and activate n8n workflows.
+    3.  Thoroughly test contact form submission through n8n to Google Sheets and email.
+    4.  Thoroughly test chatbot: greeting, general conversation, safety guardrails, lead capture flow (ensuring data reaches n8n and then Google Sheets/email).
+
+# Logical Dependency Chain (Phase 1)
+
+1.  **n8n Workflows:** Set up contact form and chat lead n8n webhooks/workflows first, as the backend and frontend will target these. (Can be prototyped).
+2.  **Flask Backend Core:** Develop the Flask `/api/chatbot` endpoint to call DeepSeek and handle basic conversation. Implement the call to the n8n webhook for lead capture.
+3.  **Frontend Chat Widget:** Build the UI and connect it to the Flask backend.
+4.  **Contact Form Frontend Update:** Point existing contact form to the n8n webhook.
+5.  **Deployment & End-to-End Testing:** Deploy all components and test the full flows.
+
+# Risks and Mitigations (Phase 1)
+
+* **Technical Challenges:**
+    * Correctly configuring Flask for Vercel Serverless Functions. Mitigation: Follow Vercel documentation, start with a simple "hello world" function.
+    * Ensuring reliable communication between: Frontend <-> Flask, Flask <-> DeepSeek, Flask <-> n8n. Mitigation: Test each integration point independently. Use robust error handling and logging.
+    * Managing DeepSeek API key securely in Vercel environment variables. Mitigation: Use Vercel's built-in environment variable management.
+* **Scope Creep for Chatbot "General Knowledge":**
+    * Risk: Chatbot might still give undesirable answers even with DeepSeek's general knowledge if not prompted carefully. Mitigation: Refine system prompts for DeepSeek to guide its tone, persona, and off-limit topics. Emphasize for this phase it's *not* using a specific Reusch AI knowledge base yet.
+* **n8n Workflow Complexity/Reliability:**
+    * Risk: Errors in n8n logic. Mitigation: Test n8n workflows thoroughly with sample data.
+* **Time Investment for "Cool" Conversational Feel:**
+    * Risk: Making the chatbot truly feel "conversational, casual, user-friendly, cool but also professional" requires iterative prompt engineering. Mitigation: Start with a good base system prompt and plan to iterate. For Phase 1, "functional and generally pleasant" is the goal.
+
+# Appendix
+* DeepSeek API Documentation: [To be found and added by Reid]
+* Flask Documentation: [https://flask.palletsprojects.com/](https://flask.palletsprojects.com/)
+* Vercel Serverless Functions Docs: [https://vercel.com/docs/functions](https://vercel.com/docs/functions)
+* n8n Documentation: [https://docs.n8n.io/](https://docs.n8n.io/)
+* RAG Documentation: [https://www.pinecone.io/learn/rag-guide/](https://www.pinecone.io/learn/rag-guide/)[https://arxiv.org/pdf/2501.00309](https://arxiv.org/pdf/2501.00309)
+* More RAG Documentation: [https://github.com/HKUDS/MiniRAG.git](https://github.com/HKUDS/MiniRAG.git)

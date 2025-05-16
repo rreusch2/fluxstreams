@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Guides the AI assistant on using the Sequential Thinking MCP tool for structured problem analysis and planning.
+globs: "*"
+alwaysApply: false # This is a tool you'd likely invoke when needed, not always.
+---
+
+- **MCP Server: sequential_thinking**
+    - **Purpose:** To facilitate structured, iterative, and reflective thinking for analyzing problems, planning solutions, and adapting to new information.
+    - **When to Use:**
+        - Complex problem decomposition.
+        - Iterative planning & design (e.g., for new features, complex bug fixes).
+        - Adaptive analysis where course corrections are anticipated.
+        - Unclear scope exploration.
+        - Multi-step context maintenance for chained reasoning.
+    - **Tool Parameters for `sequential_thinking`:**
+        - `thought` (string): Current step in reasoning.
+        - `nextThoughtNeeded` (boolean): `true` if more steps needed, `false` when resolved.
+        - `thoughtNumber` (integer): Current thought number.
+        - `totalThoughts` (integer): Current estimate of total thoughts needed (can be adjusted).
+        - `isRevision` (boolean, optional): `true` if revising a previous thought.
+        - `revisesThought` (integer, optional): If `isRevision` is true, the `thoughtNumber` being revised.
+        - `branchFromThought` (integer, optional): If exploring an alternative, the `thoughtNumber` of origin.
+        - `branchId` (string, optional): Unique ID for the current thought branch.
+        - `needsMoreThoughts` (boolean, optional): Signal that more analysis is needed even if `totalThoughts` reached.
+    - **Key Principles for Effective Use:**
+        - Iterate and refine; use `isRevision`.
+        - Adjust scope (`totalThoughts`, `nextThoughtNeeded`).
+        - Branch out (`branchFromThought`, `branchId`).
+        - Be explicit in reasoning.
+        - Hypothesize and verify.
+        - Aim for clarity in each thought.
+        - Conclude thoroughly before setting `nextThoughtNeeded: false`.
+

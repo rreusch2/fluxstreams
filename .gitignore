@@ -29,3 +29,17 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Added by Claude Task Master
+# Logs
+logs
+*.log
+dev-debug.log
+# Dependency directories
+node_modules/
+# Editor directories and files
+.vscode
+# OS specific
+# Task files
+tasks.json
+tasks/ 

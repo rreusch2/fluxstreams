@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Guides the AI assistant on using the Filesystem MCP server for advanced file and directory operations.
+globs: "*" # Or restrict to when file operations are likely, e.g., when discussing code structure, config files.
+alwaysApply: true # Or false, and invoke when file operations are explicitly discussed.
+---
+
+- **MCP Server: filesystem**
+    - **Purpose:** Provides comprehensive tools for file system interaction, restricted to configured directories.
+    - **When to Use:** For complex file edits, moving/renaming, recursive searching, getting metadata, managing directories, when built-in tools are insufficient. **Always confirm allowed paths with `list_allowed_directories` if unsure.**
+    - **Key Tools & Parameters:**
+        - **Reading:**
+            - `read_file`: `path` (string)
+            - `read_multiple_files`: `paths` (string[])
+        - **Writing & Editing (Use with Caution!):**
+            - `write_file`: `path` (string), `content` (string) - *Overwrites without warning.*
+            - `edit_file`: `path` (string), `edits` (array of {`oldText`, `newText`}), `dryRun` (boolean, default: false) - **ALWAYS use `dryRun: true` first, then verify diff before `dryRun: false`.**
+        - **Directory Operations:**
+            - `create_directory`: `path` (string) - Creates parents, silent if exists.
+            - `list_directory`: `path` (string) - Prefixes with `[FILE]` or `[DIR]`.
+            - `move_file`: `source` (string), `destination` (string) - Fails if destination exists.
+        - **Searching & Metadata:**
+            - `search_files`: `path` (string), `pattern` (string), `excludePatterns` (string[], optional)
+            - `get_file_info`: `path` (string)
+        - **Utility:**
+            - `list_allowed_directories`: No input. Lists accessible base directories.
+    - **Important Best Practices:**
+        - **Scoped Access:** Operations are restricted.
+        - **`edit_file` Safety:** ALWAYS `dryRun: true` first.
+        - **`write_file` Caution:** Double-check paths.
+
+        - **Path Specificity:** Ensure paths are accurate.
