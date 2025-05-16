@@ -29,10 +29,10 @@ const ValueProposition: React.FC = () => {
     <section id="services" className="py-16 md:py-24 bg-slate-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight" data-aos="fade-up">
             How We Help Businesses <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Thrive</span>
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8" data-aos="fade-up" data-aos-delay="100">
             Our AI solutions address your most pressing challenges and transform them into competitive advantages.
           </p>
         </div>
@@ -41,7 +41,9 @@ const ValueProposition: React.FC = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-8 border-t-4 border-t-teal-500"
+              className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-8 border-t-4 border-t-teal-500 hover:-translate-y-1"
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
             >
               <div className="flex justify-center mb-4">
                 <div className="transform hover:scale-110 transition-transform duration-200">

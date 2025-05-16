@@ -42,10 +42,10 @@ const Testimonials: React.FC = () => {
     <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight" data-aos="fade-up">
             What Our Clients Are <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Saying</span>
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100">
             Real results from businesses that have transformed their operations with our AI solutions.
           </p>
         </div>
@@ -53,21 +53,28 @@ const Testimonials: React.FC = () => {
         {/* Desktop & Tablet View */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <TestimonialCard
+            <div 
               key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              role={testimonial.role}
-              company={testimonial.company}
-              index={index}
-            />
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
+              data-aos-duration="1000"
+            >
+              <TestimonialCard
+                quote={testimonial.quote}
+                author={testimonial.author}
+                role={testimonial.role}
+                company={testimonial.company}
+                index={index}
+              />
+            </div>
           ))}
         </div>
         
         {/* Mobile View - Carousel */}
         <div className="md:hidden">
-          <div className="relative">
-            <div className="transition-opacity duration-500">
+          <div className="relative overflow-hidden">
+            <div className="transition-all duration-500 transform" 
+                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
               <TestimonialCard
                 quote={testimonials[currentIndex].quote}
                 author={testimonials[currentIndex].author}

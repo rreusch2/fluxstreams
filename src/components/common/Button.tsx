@@ -17,12 +17,12 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   type = 'button',
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500';
+  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-teal-500 to-indigo-600 text-white hover:from-teal-600 hover:to-indigo-700 shadow-md hover:shadow-lg',
-    secondary: 'bg-slate-800 text-white hover:bg-slate-700',
-    outline: 'bg-transparent border border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800/30'
+    primary: 'relative overflow-hidden bg-gradient-to-r from-teal-500 to-indigo-600 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.02] after:absolute after:inset-0 after:bg-white/20 after:opacity-0 hover:after:opacity-100 after:transition-opacity',
+    secondary: 'bg-slate-800 text-white hover:bg-slate-700 hover:-translate-y-0.5 hover:shadow-lg transition-all',
+    outline: 'bg-transparent border border-slate-300 text-slate-700 hover:bg-slate-50 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800/30 transition-all'
   };
   
   const sizeClasses = {

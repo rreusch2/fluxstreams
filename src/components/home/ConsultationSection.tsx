@@ -27,7 +27,7 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Content */}
-          <div>
+          <div data-aos="fade-right">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               Discover Your AI Potential
               <span className="block mt-2 bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">
@@ -42,7 +42,12 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
             
             <div className="space-y-4 mb-8">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-start">
+                <div 
+                  key={index} 
+                  className="flex items-start"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
                   <div className="flex-shrink-0 mr-3 mt-1">
                     <div className="transform hover:scale-110 transition-transform duration-200">
                       {feature.icon}
@@ -65,7 +70,7 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
           </div>
           
           {/* Right Column - Illustration */}
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center" data-aos="fade-left">
             <div className="relative w-full max-w-lg">
               {/* Decorative Elements */}
               <div className="absolute -top-4 -left-4 w-24 h-24 bg-teal-500/20 rounded-full blur-xl"></div>

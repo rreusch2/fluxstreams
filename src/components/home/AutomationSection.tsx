@@ -11,7 +11,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
     <section className="py-16 md:py-24 bg-slate-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 md:mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight" data-aos="fade-up">
             Custom AI Solutions, <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Built For You</span>
           </h2>
           <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
@@ -21,7 +21,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           {/* Left Column - Automation Diagram */}
-          <div className="relative bg-white rounded-xl shadow-xl p-8 md:p-10 overflow-hidden order-2 lg:order-1">
+          <div className="relative bg-white rounded-xl shadow-xl p-8 md:p-10 overflow-hidden order-2 lg:order-1" data-aos="fade-right">
             {/* Decorative background elements */}
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-indigo-100 rounded-full"></div>
             <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-teal-100 rounded-full"></div>
@@ -104,17 +104,17 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
           </div>
           
           {/* Right Column - Text Content */}
-          <div className="order-1 lg:order-2">
+          <div className="order-1 lg:order-2" data-aos="fade-left">
             <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 tracking-tight">
               Seamless Integration With Your Existing Systems
             </h3>
             
-            <p className="text-lg md:text-xl text-slate-600 mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-600 mb-12 leading-relaxed">
               Our custom AI solutions seamlessly integrate with hundreds of platforms and services 
               you already use, creating intelligent workflows that enhance productivity and reduce manual tasks.
             </p>
             
-            <div className="mb-8 bg-white p-8 rounded-lg shadow-lg border-l-4 border-teal-500 hover:shadow-xl transition-shadow">
+            <div className="mb-12 bg-white p-8 md:p-10 rounded-lg shadow-lg border-l-4 border-teal-500 hover:shadow-xl transition-shadow">
               <h4 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4 tracking-tight">
                 Intelligent Responses
               </h4>
@@ -125,7 +125,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
               </p>
             </div>
             
-            <div className="mb-8 bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500 hover:shadow-xl transition-shadow">
+            <div className="mb-12 bg-white p-8 md:p-10 rounded-lg shadow-lg border-l-4 border-indigo-500 hover:shadow-xl transition-shadow">
               <h4 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4 tracking-tight">
                 Automated Lead Capture & Data Entry
               </h4>
@@ -136,15 +136,17 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
               </p>
             </div>
             
-            <Button 
-              variant="primary" 
-              size="lg" 
-              onClick={() => navigateTo('contact')}
-              className="group"
-            >
-              Discuss Your Automation Project
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
+            <div className="mt-16 flex justify-center lg:justify-start">
+              <Button 
+                variant="primary" 
+                size="lg" 
+                onClick={() => navigateTo('contact')}
+                className="group"
+              >
+                Discuss Your Automation Project
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

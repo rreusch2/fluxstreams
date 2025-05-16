@@ -6,9 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reusch AI Solutions - Intelligent AI Solutions for Business</title>
     <meta name="description" content="Reusch AI Solutions specializes in creating custom AI automations that streamline operations, boost efficiency, and provide competitive advantages for forward-thinking businesses." />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+        easing: 'ease-out-cubic',
+        mirror: false,
+        anchorPlacement: 'top-bottom',
+        disable: 'mobile'
+      });
+      
+      window.addEventListener('resize', () => {
+        AOS.refresh();
+      });
+    </script>
   </body>
 </html>
