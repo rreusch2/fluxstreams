@@ -17,7 +17,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
                 Reusch AI Solutions
               </span>
             </div>
-            <p className="text-slate-300 text-sm mb-4">
+            <p className="text-slate-300 text-base md:text-lg mb-4 leading-relaxed">
               Transforming businesses through intelligent AI automation and custom solutions.
             </p>
             <div className="flex space-x-4">

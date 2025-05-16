@@ -110,7 +110,7 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10 pt-16">
         <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fadeIn">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fadeIn tracking-tight">
             <span className="bg-gradient-to-r from-teal-400 to-indigo-500 bg-clip-text text-transparent">
               Transform Your Business
             </span>
@@ -118,7 +118,7 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
             With Intelligent AI Solutions
           </h1>
           
-          <p className="text-xl text-slate-300 mb-8 animate-fadeInUp">
+          <p className="text-xl md:text-2xl text-slate-300 mb-10 animate-fadeInUp leading-relaxed">
             Reusch AI Solutions specializes in creating custom AI automations that streamline operations, 
             boost efficiency, and provide competitive advantages for forward-thinking businesses.
           </p>

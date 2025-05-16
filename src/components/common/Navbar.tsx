@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, navigateTo }) => {
               <li>
                 <button
                   onClick={() => handleNavigation('home')}
-                  className={`text-base md:text-lg font-medium transition-colors hover:text-teal-400 ${
+                  className={`text-lg md:text-xl font-medium transition-colors hover:text-teal-400 ${
                     currentPage === 'home' ? 'text-teal-400' : 'text-white'
                   }`}
                 >

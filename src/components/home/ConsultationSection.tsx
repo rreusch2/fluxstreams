@@ -28,14 +28,14 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Content */}
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               Discover Your AI Potential
               <span className="block mt-2 bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">
                 For Free
               </span>
             </h2>
             
-            <p className="text-lg text-slate-300 mb-8">
+            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
               Our complimentary AI Opportunity Consultation is designed to reveal the untapped potential 
               in your business. We'll identify specific areas where AI can make the biggest impact on your operations.
             </p>
@@ -44,9 +44,11 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start">
                   <div className="flex-shrink-0 mr-3 mt-1">
-                    {feature.icon}
+                    <div className="transform hover:scale-110 transition-transform duration-200">
+                      {feature.icon}
+                    </div>
                   </div>
-                  <p className="text-slate-300">{feature.text}</p>
+                  <p className="text-lg md:text-xl text-slate-300 leading-relaxed">{feature.text}</p>
                 </div>
               ))}
             </div>
@@ -64,7 +66,7 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
           
           {/* Right Column - Illustration */}
           <div className="relative flex justify-center">
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-lg">
               {/* Decorative Elements */}
               <div className="absolute -top-4 -left-4 w-24 h-24 bg-teal-500/20 rounded-full blur-xl"></div>
               <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl"></div>
@@ -73,13 +75,13 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20 shadow-xl relative z-10">
                 <div className="text-center mb-6">
                   <div className="inline-block p-3 bg-teal-500/20 rounded-full mb-4">
-                    <FileText className="h-8 w-8 text-teal-400" />
+                    <FileText className="h-10 w-10 text-teal-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Your Free AI Assessment</h3>
-                  <p className="text-slate-300 text-sm">Comprehensive analysis delivered within 48 hours</p>
+                  <h3 className="text-2xl md:text-3xl font-semibold mb-3 tracking-tight">Your Free AI Assessment</h3>
+                  <p className="text-slate-300 text-lg md:text-xl">Comprehensive analysis delivered within 48 hours</p>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {[
                     'Business Process Analysis',
                     'AI Opportunity Mapping',
@@ -88,14 +90,16 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
                     'Implementation Roadmap'
                   ].map((item, index) => (
                     <div key={index} className="flex items-center">
-                      <div className="h-2 w-2 rounded-full bg-teal-400 mr-3"></div>
-                      <span className="text-slate-200">{item}</span>
+                      <div className="h-3 w-3 rounded-full bg-teal-400 mr-4"></div>
+                      <span className="text-lg md:text-xl text-slate-200">{item}</span>
                     </div>
                   ))}
                 </div>
                 
-                <div className="mt-8 pt-6 border-t border-white/10">
-                  <p className="text-center text-teal-300 font-medium">Value: $500 • Your Cost: $0</p>
+                <div className="mt-10 pt-8 border-t border-white/10">
+                  <p className="text-center text-teal-300 text-lg md:text-xl font-semibold tracking-tight">
+                    Value: $500 • Your Cost: $0
+                  </p>
                 </div>
               </div>
             </div>

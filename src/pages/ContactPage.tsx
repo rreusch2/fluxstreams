@@ -35,10 +35,10 @@ const ContactPage: React.FC = () => {
       {/* Page Header */}
       <div className="bg-slate-900 py-16 mb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
             Let's Start Your <span className="bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">AI Journey</span>
           </h1>
-          <p className="text-slate-300 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-300 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
             Whether you're interested in our free consultation or a custom AI build, 
             we're excited to hear from you and explore how we can help transform your business.
           </p>
@@ -82,7 +82,7 @@ const ContactPage: React.FC = () => {
                           {item.content}
                         </a>
                       ) : (
-                        <p className="text-slate-600">{item.content}</p>
+                        <p className="text-base md:text-lg text-slate-600">{item.content}</p>
                       )}
                     </div>
                   </div>
@@ -94,7 +94,7 @@ const ContactPage: React.FC = () => {
               <h3 className="font-semibold text-indigo-800 mb-3">
                 Free Consultation Benefits
               </h3>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-3 text-base md:text-lg">
                 <li className="flex items-start">
                   <span className="text-indigo-500 mr-2">✓</span>
                   <span className="text-slate-700">Personalized AI opportunity assessment</span>
