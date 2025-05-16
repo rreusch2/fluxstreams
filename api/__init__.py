@@ -16,3 +16,4 @@ def health_check():
 # they would be imported and registered here or via Blueprints.
 # For example:
 # from . import chatbot # Assuming chatbot.py defines routes on a Blueprint or directly on 'app' if imported 
+from . import chatbot # Register chatbot routes 

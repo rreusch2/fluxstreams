@@ -29,11 +29,16 @@ alwaysApply: true
             - Goals (project goals, learning aspirations)
             - Relationships (key collaborators, important contacts related to the project)
     - **Memory Update Action (Storing Information):**
-        - If new, relevant, and persistent information is gathered, use the tools below to update memory.
-        - Create entities for recurring organizations, people, projects, and significant technical decisions or preferences.
-        - Connect entities using meaningful relations.
-        - Store specific facts as observations.
-        - **Memory Update Checkpoint:** After a user confirms completion of a multi-step task/subtask, or after significant new project details, user preferences, or key decisions are explicitly shared, the AI should pause and proactively review the recent interaction to determine if new entities, relations, or observations should be stored.
+        - **1. Identify or Create Target Entity:**
+            - **Search First:** Before creating a new entity, ALWAYS use `search_nodes` or `open_nodes` (if a likely name is known) to find an existing relevant entity. Prioritize updating existing entities over creating duplicates.
+            - **Consistent Naming:** If a new entity must be created (e.g., for a new project phase or a distinct new concept), use clear, prefixed names (e.g., `project:ProjectName`, `user:UserName`, `preference:FeaturePreference`). Strive for consistency with existing entities (e.g., casing, use of spaces, though ensure the system supports your choice).
+            - **Confirm Entity Name:** After identifying or creating an entity, be CERTAIN of its exact name before proceeding to add observations or relations. If unsure, use `search_nodes` with a specific query to retrieve the exact name.
+        - **2. Add Information:**
+            - If new, relevant, and persistent information is gathered, use the tools below to update memory.
+            - Create new entities *only if necessary* (see step 1).
+            - Connect entities using meaningful relations.
+            - Store specific facts as observations on the *correctly identified* entity.
+        - **Memory Update Checkpoint:** After a user confirms completion of a multi-step task/subtask, or after significant new project details, user preferences, or key decisions are explicitly shared, the AI should pause and proactively review the recent interaction to determine if new entities, relations, or observations should be stored following the protocol above.
     - **Key Tools & Parameters:**
         - **`create_entities`**: `entities` (array of {`name`, `entityType`, `observations`[]})
         - **`create_relations`**: `relations` (array of {`from`, `to`, `relationType`})
@@ -47,9 +52,9 @@ alwaysApply: true
     - **Key Principles for Effective Memory Use:**
         - **Relevance for Us:** Store information important for *our future interactions* on this "Reusch AI Solutions" project or your general preferences for my assistance.
         - **Atomicity:** Each observation a single fact.
-        - **Clear Naming:** Prefix entity names (e.g., `user:Reid`, `project:ChatbotPhase1`, `preference:PythonForBackend`).
+        - **Clear Naming:** Prefix entity names (e.g., `user:Reid`, `project:ChatbotPhase1`, `preference:PythonForBackend`). Ensure consistency with how entities are created and retrieved.
         - **Active Voice Relations:** (e.g., "user:Reid" `uses_os` "os:Windows11").
         - **Incremental & Triggered Updates:** Add info as it becomes relevant, and specifically perform a memory review at designated checkpoints (see "Memory Update Checkpoint" above).
         - **Proactive Retrieval:** Before complex queries/tasks, consider `search_nodes` or `open_nodes` for relevant stored context.
         - **Categorize with `entityType`:** (e.g., "user_preference", "project_decision", "technical_constraint").
-        - **Avoid Trivial Info:** Don't store rapidly changing or unimportant details unless asked by the user directly to remember something specific and transient.
+        - **Avoid Trivial Info / Selectivity:** Don't store rapidly changing or unimportant details unless asked by the user directly to remember something specific and transient. Focus on observations that capture key decisions, completed milestones, significant changes in direction, user-stated preferences, or context that will be *genuinely useful for future interactions or understanding project evolution*. Evaluate if an observation provides lasting value before storing.

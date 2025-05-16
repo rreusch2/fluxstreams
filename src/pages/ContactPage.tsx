@@ -1,44 +1,47 @@
 import React from 'react';
 import ContactForm from '../components/common/ContactForm';
+import ChatWidget from '../components/common/ChatWidget';
+import ContactInfoCard from '../components/common/ContactInfoCard';
+import BenefitsCard from '../components/common/BenefitsCard';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 const ContactPage: React.FC = () => {
-  const contactItems = [
+  const contactItemsData = [
     {
-      icon: <Mail className="h-5 w-5 text-teal-500" />,
+      icon: <MapPin className="h-5 w-5 text-teal-400" />,
+      title: 'Founder',
+      content: 'Reid Reusch',
+      link: 'https://www.linkedin.com/in/reid-reusch-37232b48'
+    },
+    {
+      icon: <Mail className="h-5 w-5 text-teal-400" />,
       title: 'Email',
       content: 'info@reuschai.com',
       link: 'mailto:info@reuschai.com'
     },
     {
-      icon: <Phone className="h-5 w-5 text-teal-500" />,
+      icon: <Phone className="h-5 w-5 text-teal-400" />,
       title: 'Phone',
-      content: '(555) 123-4567',
-      link: 'tel:+15551234567'
+      content: '(270) 724-2404',
+      link: 'tel:+12707242404'
     },
     {
-      icon: <MapPin className="h-5 w-5 text-teal-500" />,
-      title: 'Address',
-      content: '123 AI Boulevard, Tech District, CA 94103',
-      link: 'https://maps.google.com'
-    },
-    {
-      icon: <Clock className="h-5 w-5 text-teal-500" />,
+      icon: <Clock className="h-5 w-5 text-teal-400" />,
       title: 'Hours',
-      content: 'Monday - Friday: 9AM - 5PM PST',
+      content: 'Monday - Friday: 8AM - 5PM EST',
       link: null
     }
   ];
   
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen pt-20 bg-gradient-to-b from-slate-900 via-indigo-900 to-slate-900 text-white">
       {/* Page Header */}
-      <div className="bg-slate-900 py-16 mb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+      <div className="py-16 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
             Let's Start Your <span className="bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">AI Journey</span>
           </h1>
-          <p className="text-slate-300 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-300 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
             Whether you're interested in our free consultation or a custom AI build, 
             we're excited to hear from you and explore how we can help transform your business.
           </p>
@@ -46,73 +49,34 @@ const ContactPage: React.FC = () => {
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                Get in Touch
+        {/* Row 1: Contact Form (Left) and Chatbot (Right) */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-8 lg:mb-12">
+          {/* Left Column of Row 1: Contact Form Card */}
+          <div className="lg:w-1/2">
+            <div className="bg-slate-800/70 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700 h-full p-6 md:p-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent mb-6">
+                Send Us a Message
               </h2>
               <ContactForm />
             </div>
           </div>
           
-          {/* Contact Information */}
-          <div>
-            <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">
-                Contact Information
-              </h2>
-              
-              <div className="space-y-4">
-                {contactItems.map((item, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="flex-shrink-0 mt-1 mr-3">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-slate-900">
-                        {item.title}
-                      </h3>
-                      {item.link ? (
-                        <a 
-                          href={item.link}
-                          className="text-slate-600 hover:text-teal-500 transition-colors"
-                        >
-                          {item.content}
-                        </a>
-                      ) : (
-                        <p className="text-base md:text-lg text-slate-600">{item.content}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-100">
-              <h3 className="font-semibold text-indigo-800 mb-3">
-                Free Consultation Benefits
-              </h3>
-              <ul className="space-y-3 text-base md:text-lg">
-                <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
-                  <span className="text-slate-700">Personalized AI opportunity assessment</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
-                  <span className="text-slate-700">Custom report with actionable insights</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
-                  <span className="text-slate-700">AI tool recommendations tailored to your business</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-indigo-500 mr-2">✓</span>
-                  <span className="text-slate-700">Implementation guidance from industry experts</span>
-                </li>
-              </ul>
-            </div>
+          {/* Right Column of Row 1: AI Chatbot */}
+          <div className="lg:w-1/2">
+            <ChatWidget />
+          </div>
+        </div>
+
+        {/* Row 2: Contact Info (Left) and Benefits (Right) */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          {/* Left Column of Row 2: Contact Information Card */}
+          <div className="lg:w-1/2">
+            <ContactInfoCard contactItems={contactItemsData} />
+          </div>
+
+          {/* Right Column of Row 2: Free Consultation Benefits Card */}
+          <div className="lg:w-1/2">
+            <BenefitsCard />
           </div>
         </div>
       </div>

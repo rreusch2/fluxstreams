@@ -58,10 +58,9 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <address className="not-italic text-sm text-slate-300 space-y-2">
-              <p>123 AI Boulevard</p>
-              <p>Tech District, CA 94103</p>
+              <p>Reid Reusch</p>
               <p>info@reuschai.com</p>
-              <p>(555) 123-4567</p>
+              <p>(270) 724-2404</p>
             </address>
           </div>
         </div>
