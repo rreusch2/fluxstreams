@@ -15,7 +15,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
             Custom AI Solutions, <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Built For You</span>
           </h2>
           <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            We design and build bespoke AI automations and intelligent workflows tailored to your specific business challenges.
+            We design and build AI automations and intelligent workflows tailored to your specific business challenges.
           </p>
         </div>
         

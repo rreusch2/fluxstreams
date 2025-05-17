@@ -33,11 +33,11 @@ const InputArea: React.FC<InputAreaProps> = ({ input, setInput, handleSubmit, is
         disabled={isTyping || !input.trim()}
         className="p-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-800"
         aria-label="Send message"
-      >
-        <Send size={20} />
-      </button>
-    </form>
-  );
+   >
+     <Send size={20} />
+   </button>
+ </form>
+);
 };
 
-export default InputArea; 
+export default InputArea;

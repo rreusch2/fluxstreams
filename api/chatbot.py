@@ -132,29 +132,33 @@ def chatbot():
         try:
             # Ensure payload_str for parsing is *only* the content of the marker line
             marker_content_line = assistant_response_content.split(lead_capture_marker, 1)[1].strip()
-            # Further split by " Thanks," is no longer needed here if the marker line is clean as per new prompt.
-            payload_str = marker_content_line 
+            
+            # More robust regex to capture fields, especially multi-part messages
+            # This regex tries to capture known fields and then takes everything for Message
+            # It makes LastName and Phone optional in the capture group
+            lead_pattern = re.compile(
+                r"FirstName: (?P<FirstName>[^,]+)(?:,\s*LastName: (?P<LastName>[^,]+))?,\s*Email: (?P<Email>[^,]+)(?:,\s*Phone: (?P<Phone>[^,]+))?,\s*Message: (?P<Message>.+)"
+            )
+            match = lead_pattern.search(marker_content_line)
 
-            parts = payload_str.split(", ") 
-            for part in parts:
-                if ":" in part:
-                    key, value = part.split(":", 1)
-                    # Standardize key to match expected PascalCase (e.g., "FirstName", "LastName")
-                    raw_key = key.strip()
-                    if raw_key.lower() == "firstname":
-                        standardized_key = "FirstName"
-                    elif raw_key.lower() == "lastname":
-                        standardized_key = "LastName"
-                    elif raw_key.lower() == "email":
-                        standardized_key = "Email"
-                    elif raw_key.lower() == "phone":
-                        standardized_key = "Phone"
-                    elif raw_key.lower() == "message":
-                        standardized_key = "Message"
-                    else:
-                        standardized_key = raw_key.capitalize() # Fallback for any other keys
-                    
-                    parsed_details[standardized_key] = value.strip()
+            if match:
+                parsed_details = {k: v.strip() if v else "N/A" for k, v in match.groupdict().items()}
+            else:
+                # Fallback to simpler split if regex fails, though this is less robust for messages with commas
+                logger.warning(f"Complex regex failed for lead parsing on: {marker_content_line}. Falling back to simple split.")
+                parts = marker_content_line.split(", ") 
+                for part in parts:
+                    if ":" in part:
+                        key, value = part.split(":", 1)
+                        raw_key = key.strip()
+                        # Standardize key (existing logic)
+                        if raw_key.lower() == "firstname": standardized_key = "FirstName"
+                        elif raw_key.lower() == "lastname": standardized_key = "LastName"
+                        elif raw_key.lower() == "email": standardized_key = "Email"
+                        elif raw_key.lower() == "phone": standardized_key = "Phone"
+                        elif raw_key.lower() == "message": standardized_key = "Message"
+                        else: standardized_key = raw_key.capitalize()
+                        parsed_details[standardized_key] = value.strip()
             
             logger.info(f"Parsed lead details from marker: {parsed_details}")
 
