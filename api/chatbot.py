@@ -70,7 +70,7 @@ def parse_lead_details(text: str) -> dict:
     logger.info(f"Parsed lead details: {details}")
     return details
 
-@app.route('/chatbot', methods=['POST'])
+@app.route('/api/chatbot', methods=['POST'])
 @limiter.limit("10 per minute") # Apply rate limit to this endpoint
 def chatbot():
     data = request.json
@@ -188,7 +188,7 @@ def chatbot():
         "response": final_assistant_response_for_user
     })
 
-@app.route('/chatbot/greeting', methods=['GET'])
+@app.route('/api/chatbot/greeting', methods=['GET'])
 @limiter.limit("30 per minute") # Apply a slightly more relaxed limit for greetings
 def chatbot_greeting():
     """Return the initial greeting message for the chatbot."""
