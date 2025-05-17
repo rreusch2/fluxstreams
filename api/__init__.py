@@ -19,5 +19,5 @@ def health_check():
 from . import chatbot # Register chatbot routes 
 
 # Handler for Vercel serverless functions
-def handler(request):
-    return app(request) 
+# def handler(request):
+#     return app(request) 
