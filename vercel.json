@@ -7,13 +7,23 @@
     },
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/static-build",  // Corrected for Vite
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "api/index.py"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
-} 
+}
