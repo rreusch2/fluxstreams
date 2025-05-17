@@ -17,3 +17,7 @@ def health_check():
 # For example:
 # from . import chatbot # Assuming chatbot.py defines routes on a Blueprint or directly on 'app' if imported 
 from . import chatbot # Register chatbot routes 
+
+# Handler for Vercel serverless functions
+def handler(request):
+    return app(request) 

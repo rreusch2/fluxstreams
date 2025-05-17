@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/**/*.py", "use": "@vercel/python" },
+    { "src": "api/__init__.py", "use": "@vercel/python" },
     { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
   ],
   "routes": [
