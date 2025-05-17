@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Button from '../common/Button';
+import ChatWidget from '../common/ChatWidget';
 
 interface HeroProps {
   navigateTo: (page: string) => void;
@@ -34,7 +35,7 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
       color: string;
     }[] = [];
     
-    const colors = ['#0891b2', '#6366f1', '#4f46e5', '#0ea5e9'];
+    const colors = ['#06b6d4', '#818cf8', '#6366f1', '#0ea5e9'];
     
     for (let i = 0; i < 50; i++) {
       particles.push({
@@ -81,7 +82,7 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
           
           if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(148, 163, 184, ${0.1 * (1 - distance / 100)})`; // slate-400 with dynamic opacity
+            ctx.strokeStyle = `rgba(100, 116, 139, ${0.15 * (1 - distance / 100)})`; // slate-500 with dynamic opacity, slightly more visible
             ctx.lineWidth = 0.5;
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
@@ -101,48 +102,60 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
   }, []);
   
   return (
-    <section className="relative h-screen flex items-center text-white overflow-hidden">
+    <section className="relative min-h-screen flex items-center text-white overflow-hidden py-20">
       {/* Background canvas */}
       <canvas 
         ref={canvasRef} 
         className="absolute top-0 left-0 w-full h-full bg-slate-900 -z-10"
       />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10 pt-16">
-        <div className="max-w-3xl">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fadeIn tracking-tight">
-            <span className="bg-gradient-to-r from-teal-400 to-indigo-500 bg-clip-text text-transparent">
-              Transform Your Business
-            </span>
-            <br />
-            With Intelligent AI Solutions
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-slate-300 mb-10 animate-fadeInUp leading-relaxed">
-            Reusch AI Solutions specializes in creating custom AI automations that streamline operations, 
-            boost efficiency, and provide competitive advantages for forward-thinking businesses.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 animate-fadeInUp">
-            <Button 
-              variant="primary" 
-              size="lg" 
-              onClick={() => navigateTo('contact')}
-            >
-              Book Your Free AI Consultation
-            </Button>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column - Main Hero Content */}
+          <div className="lg:col-span-7">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fadeIn tracking-tight">
+              <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                Transform Your Business
+              </span>
+              <br />
+              With Intelligent AI Solutions
+            </h1>
             
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-white text-white hover:bg-white/10"
-              onClick={() => {
-                const servicesSection = document.getElementById('services');
-                servicesSection?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Explore Our Services
-            </Button>
+            <p className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-12 animate-fadeInUp leading-relaxed">
+              We craft AI automations to streamline your operations, 
+              boost efficiency, and secure your competitive edge.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 animate-fadeInUp">
+              <Button 
+                variant="primary" 
+                size="lg" 
+                onClick={() => navigateTo('contact')}
+                className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out py-3 px-8 text-lg"
+              >
+                Book Your Free AI Consultation →
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-slate-300 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-slate-400 transition-colors duration-300 py-3 px-8 text-lg"
+                onClick={() => {
+                  const servicesSection = document.getElementById('services');
+                  servicesSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Explore Our Services
+              </Button>
+            </div>
+          </div>
+
+         
+         {/* Right Column - AI Assistant Showcase */}
+          <div className="lg:col-span-5 mt-12 lg:mt-0">
+            <div className="h-full">
+              <ChatWidget />
+            </div>
           </div>
         </div>
       </div>

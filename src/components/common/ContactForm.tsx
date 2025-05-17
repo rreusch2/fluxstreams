@@ -269,6 +269,16 @@ const ContactForm: React.FC = () => {
           <p className="mt-2 text-sm text-red-600 text-center">{errors.submit}</p>
         )}
       </div>
+
+      {/* What Happens Next Section */}
+      <div className="pt-2 text-center">
+        {/* <h4 className="text-sm font-semibold text-slate-300 mb-1">What Happens Next?</h4> */}
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Your inquiry is important to us. We'll review your message and aim to get back to you within one business day. 
+          We respect your privacy and your information will be kept confidential.
+        </p>
+      </div>
+
     </form>
   );
 };

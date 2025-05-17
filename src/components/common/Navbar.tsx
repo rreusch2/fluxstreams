@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, navigateTo }) => {
             >
               <Cpu className="h-8 w-8 md:h-9 md:w-9 mr-3 text-teal-400" />
               <span className="bg-gradient-to-r from-teal-400 to-indigo-500 bg-clip-text text-transparent font-semibold font-['Ancizar Sans'] text-3xl md:text-4xl">
-                Reusch AI Solutions
+                Reusch Automate
               </span>
             </button>
           </div>

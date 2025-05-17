@@ -50,7 +50,7 @@ alwaysApply: true
         - **`search_nodes`**: `query` (string) - Finds entities.
         - **`open_nodes`**: `names` (string[]) - Retrieves specific entities and direct relations.
     - **Key Principles for Effective Memory Use:**
-        - **Relevance for Us:** Store information important for *our future interactions* on this "Reusch AI Solutions" project or your general preferences for my assistance.
+        - **Relevance for Us:** Store information important for *our future interactions* on this "Reusch Automate" project or your general preferences for my assistance.
         - **Atomicity:** Each observation a single fact.
         - **Clear Naming:** Prefix entity names (e.g., `user:Reid`, `project:ChatbotPhase1`, `preference:PythonForBackend`). Ensure consistency with how entities are created and retrieved.
         - **Active Voice Relations:** (e.g., "user:Reid" `uses_os` "os:Windows11").

@@ -1,6 +1,6 @@
 import React from 'react';
 import ContactForm from '../components/common/ContactForm';
-import ChatWidget from '../components/common/ChatWidget';
+// import ChatWidget from '../components/common/ChatWidget'; // Removed ChatWidget import
 import ContactInfoCard from '../components/common/ContactInfoCard';
 import BenefitsCard from '../components/common/BenefitsCard';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
@@ -49,9 +49,10 @@ const ContactPage: React.FC = () => {
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {/* Row 1: Contact Form (Left) and Chatbot (Right) */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-8 lg:mb-12">
-          {/* Left Column of Row 1: Contact Form Card */}
+        {/* Main Two-Column Layout */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          
+          {/* Left Column: Contact Form */}
           <div className="lg:w-1/2">
             <div className="bg-slate-800/70 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700 h-full p-6 md:p-8">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent mb-6">
@@ -60,24 +61,20 @@ const ContactPage: React.FC = () => {
               <ContactForm />
             </div>
           </div>
+
+          {/* Right Column: Stacked Info Cards */}
+          <div className="lg:w-1/2 flex flex-col gap-8 lg:gap-12">
+            {/* Contact Information Card */}
+            <div> {/* Wrapper div, no specific width class needed here */}
+              <ContactInfoCard contactItems={contactItemsData} />
+            </div>
+
+            {/* Free Consultation Benefits Card */}
+            <div> {/* Wrapper div, no specific width class needed here */}
+              <BenefitsCard />
+            </div>
+          </div>
           
-          {/* Right Column of Row 1: AI Chatbot */}
-          <div className="lg:w-1/2">
-            <ChatWidget />
-          </div>
-        </div>
-
-        {/* Row 2: Contact Info (Left) and Benefits (Right) */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* Left Column of Row 2: Contact Information Card */}
-          <div className="lg:w-1/2">
-            <ContactInfoCard contactItems={contactItemsData} />
-          </div>
-
-          {/* Right Column of Row 2: Free Consultation Benefits Card */}
-          <div className="lg:w-1/2">
-            <BenefitsCard />
-          </div>
         </div>
       </div>
     </div>

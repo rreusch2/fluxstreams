@@ -17,7 +17,7 @@ const InputArea: React.FC<InputAreaProps> = ({ input, setInput, handleSubmit, is
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Type your message to Reusch AI Assistant..."
+        placeholder="Type your message to Otto..."
         disabled={isTyping}
         className="flex-grow p-2.5 bg-slate-700/80 text-slate-100 rounded-lg border border-slate-600 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors placeholder-slate-400 text-sm md:text-base resize-none"
         rows={1}

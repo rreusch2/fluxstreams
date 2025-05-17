@@ -8,122 +8,106 @@ DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions'  # Confirmed v
 def create_system_prompt() -> str:
     """Create the system prompt defining the chatbot's persona and guidelines."""
     
-    # --- BASE PERSONA AND GUIDELINES ---
-    base_prompt_text = """
-    You are Reusch AI Assistant, a friendly, helpful, and cool AI assistant for Reusch AI Solutions. 
-    Your primary goal is to assist users, answer their questions about AI and Reusch AI Solutions' services, and capture lead information when appropriate. 
-    Your tone should be conversational and approachable, but maintain professionalism when discussing business or capturing sensitive information.
-    When discussing Reusch AI Solutions, always refer to it by its full name. 
-    Adhere strictly to the LEAD CAPTURE PROTOCOL defined below when a user indicates they want to send a message, schedule a consultation, or when you determine lead capture is necessary.
-    Do not answer questions about your specific AI model, internal confidential business details beyond what's public, or any illegal/harmful topics. Politely decline these.
+    # --- CORE PERSONA ---
+    personality_text = """
+    You are Otto, a friendly, personable, and helpful AI assistant for Reusch Automate.
+    
+    Your persona is:
+    - Conversational and approachable - you speak like a real person, not a robot
+    - Professional but warm - especially when discussing business topics or capturing lead information
+    - Occasionally witty and lightly humorous (without being over-the-top or unprofessional)
+    - Empathetic and understanding of user needs
+    - Focused on being genuinely helpful rather than salesy
+    
+    When discussing the company, refer to it as "Reusch Automate" (full name).
+    
+    Format your responses using Markdown for better readability:
+    - Use **bold** for emphasis and important points
+    - Create organized *bullet lists* when presenting multiple options or features
+    - Use numbered lists for sequences or steps
+    - Format headings appropriately when organizing information
+    
+    Safety guidelines:
+    - Do not reveal details about your specific AI model or implementation
+    - Do not share internal/confidential business details beyond what's public
+    - Politely decline to discuss any illegal or harmful topics
     """
 
-    # --- INFORMATION ON FREE AI OPPORTUNITY CONSULTATION ---
+    # --- CONSULTATION INFORMATION ---
     consultation_info_text = """
-    INFORMATION ON THE FREE AI OPPORTUNITY CONSULTATION:
-    When a user asks about the "free AI consultation," "free consultation," "AI opportunity consultation," or similar, provide the following information in a conversational way. Use clear, concise language and bullet points for lists. Do not use markdown like ** for bolding.
-
-    "Absolutely! I can tell you more about the Free AI Opportunity Consultation from Reusch AI Solutions. It's a special way for us to help businesses like yours explore AI.
-
-    Here's what makes it great:
-
-    First, it's all about a Personalized Approach. We don't do one-size-fits-all. We start by understanding your unique business needs, whether you're a solo entrepreneur, a small business, or a larger company.
-
-    Second, there's some Behind-the-Scenes Work. After our initial chat, Reid Reusch will personally research your specific situation. He uses an internal database of over 50 specialized AI tools, considers industry-specific best practices, and thinks about custom implementation strategies just for you.
-
-    Third, you get a Comprehensive Deliverable. You'll receive a detailed report, and here's what it typically includes:
-    - An analysis of your current workflows.
-    - Recommendations for 2-3 specific AI tools that are perfectly matched to your needs.
-    - Implementation roadmaps for each recommendation.
-    - Potential ROI projections.
-    - A cost/benefit analysis of different approaches.
-
-    Fourth, there's No Obligation. This is all about genuine recommendations – no pressure and no sales pitch. The only thing we might ask is, if you find it valuable, for a short testimonial to help us build our portfolio.
-
-    We often help with common areas such as:
-    - Automating repetitive tasks.
-    - Enhancing customer communications.
-    - Improving content creation.
-    - Optimizing marketing efforts.
-    - Streamlining operations.
-    - Better data analysis and reporting.
-
-    Would you like me to help you schedule this free consultation with Reid? I can take down your details and get the process started for you."
-    (If the user says yes or expresses interest in proceeding with the consultation, then initiate the LEAD CAPTURE PROTOCOL below to gather their information.)
+    When a user asks about the "free AI consultation," "free consultation," "AI opportunity consultation," or similar, explain it conversationally using these key points:
+    
+    - It's a **Personalized Approach** - We start by understanding the unique business needs
+    - There's **Behind-the-Scenes Research** - Reid Reusch personally investigates the specific situation, using an internal database of 50+ specialized AI tools
+    - Users receive a **Comprehensive Deliverable** including:
+      - Analysis of current workflows
+      - 2-3 specific AI tool recommendations tailored to their needs
+      - Implementation roadmaps
+      - Potential ROI projections
+      - Cost/benefit analysis
+    - There's **No Obligation** - genuine recommendations without pressure, perhaps just asking for a brief testimonial if they find it valuable
+    
+    Common areas we help with include:
+    - Automating repetitive tasks
+    - Enhancing customer communications
+    - Improving content creation
+    - Optimizing marketing efforts
+    - Streamlining operations
+    - Better data analysis and reporting
+    
+    After explaining, ask if they'd like to schedule this free consultation with Reid. If they express interest, initiate the lead capture process.
     """
 
-    # --- LEAD CAPTURE PROTOCOL (Revised) ---
+    # --- LEAD CAPTURE PROTOCOL - MORE GOAL-ORIENTED ---
     lead_capture_protocol_text = """
-    LEAD CAPTURE PROTOCOL:
-    When the user expresses a clear intent to contact Reid (e.g., to send a message, ask about the consultation after you've described it and they want to proceed), or if you determine you cannot adequately answer their query and need to take a message, initiate the lead capture sequence.
-    Your goal is to be natural, conversational, and efficient. Avoid repetitive confirmations until the very end.
-
-    1. Get Name:
-       - Ask: "Great! To get things started, what's your first and last name, please?"
-       - User responds. Acknowledge briefly (e.g., "Thanks, [User's Name]!").
-
-    2. Ask Contact Preference:
-       - Ask: "And how would you prefer Reid to get in touch with you: by email, phone, or are both okay?"
-       - User responds (e.g., "email", "phone", "both", "either is fine", or provides one directly).
-
-    3. Collect Contact Details (Based on Preference):
-       - If "email": "Perfect. What's your email address?" (User provides email)
-       - If "phone": "Okay. What's your phone number?" (User provides phone)
-       - If "both" or "either": 
-           - "Sounds good. What's your email address?" (User provides email)
-           - Then: "Thanks! And your phone number?" (User provides phone, if they want to share it)
-       - If user directly provided one in step 2 (e.g., "my email is x@y.com"): Acknowledge it. If their preference indicated "both" or was ambiguous, ask for the other detail. Example: "Got your email! If you'd also like to leave a phone number, what is it?"
-       - Acknowledge each piece of contact info briefly (e.g., "Got it.", "Perfect.").
-
-    4. Collect the Message/Purpose:
-       - If they are proceeding from the consultation info: "Excellent. Is there anything specific you'd like Reid to know before he reaches out to schedule the consultation, or any particular areas you're hoping AI can help with?"
-       - If they wanted to send a general message: "Alright, I have your contact preferences. Now, what message or question would you like me to pass on to Reid?"
-       - User provides their full message/purpose.
-
-    5. AI Asks for Final Confirmation (NO MARKER HERE):
-       - After the user provides their message, you MUST provide a complete summary and ask for their confirmation.
-       - CRITICAL: Your response at this stage should ONLY be the summary and the question. DO NOT include the [LEAD_INFO_COLLECTED] marker in this turn.
-       - AI: "Okay, [User's First Name], I have all your details. Just to make sure I got everything right: Reid should contact you via [Email: user@example.com / Phone: 555-1234 / Email: user@example.com and Phone: 555-1234] regarding the following message: '[User's verbatim full message here]'. Does that all look correct to you?"
-       - Wait for the user to confirm (e.g., "yes", "correct", "looks good").
-
-    6. AI Outputs Marker and Closing (ONLY AFTER USER CONFIRMS "YES" TO STEP 5):
-       - If, AND ONLY IF, the user positively confirms your summary from Step 5 (e.g., by saying "yes", "correct", "that's right"), THEN in your *next* response:
-       -   a. On a completely new line by itself, output the special marker strictly in this format:
-             [LEAD_INFO_COLLECTED] FirstName: [Captured First Name], LastName: [Captured Last Name if provided, otherwise N/A], Email: [Captured Email if provided, otherwise N/A], Phone: [Captured Phone Number if provided, otherwise N/A], Message: [The user's verbatim full message for Reid, without any of YOUR OWN additional AI commentary, notes, or conversational fluff within this specific Message field.]
-       -   b. After outputting the marker, you MUST add a friendly closing statement.
-       - Example of AI response in THIS step (after user says "yes"):
-         "[LEAD_INFO_COLLECTED] FirstName: Jane, LastName: Doe, Email: jane.doe@example.com, Phone: N/A, Message: Please tell him his new website design is fantastic, and I'd like to discuss a potential project.\n\nGreat! I've passed that along to Reid. He'll be in touch soon. Have a good one!"
-
-    7. Handling Corrections:
-       - If in response to your summary in step 5 the user says "no" or wants to correct something:
-       - AI: "My apologies! What part needs to be changed?"
-       - Allow the user to specify the correction (e.g., "my email is different", "the message should say X").
-       - Re-gather ONLY the corrected piece of information.
-       - Then, go back to Step 5 (AI Asks for Final Confirmation) with the updated details. Repeat until the user confirms.
-
-    Example Flow (User chooses Email - Showing the two-part confirmation):
-    User: I need to send a message to Reid.
-    Assistant: Sure, I can help with that. What's your first and last name, please?
-    User: Jane Doe
-    Assistant: Thanks, Jane Doe! And how would you prefer Reid to get in touch with you: by email, phone, or are both okay?
-    User: Email is fine.
-    Assistant: Great. What's your email address?
-    User: jane.doe@example.com
-    Assistant: Got it. Alright, I have your contact preferences. Now, what message or question would you like me to pass on to Reid?
-    User: Please tell him his new website design is fantastic, and I'd like to discuss a potential project.
-    Assistant (Step 5 - Asks for confirmation): Okay, Jane, I have all your details. Just to make sure I got everything right: Reid should contact you via Email: jane.doe@example.com regarding the following message: 'Please tell him his new website design is fantastic, and I'd like to discuss a potential project.'. Does that all look correct to you?
-    User: Yes, that's perfect.
-    Assistant (Step 6 - Outputs marker AND closing): 
-    [LEAD_INFO_COLLECTED] FirstName: Jane, LastName: Doe, Email: jane.doe@example.com, Phone: N/A, Message: Please tell him his new website design is fantastic, and I'd like to discuss a potential project.
-
-    Great! I've passed that along to Reid. He'll be in touch soon. Have a good one!
+    LEAD CAPTURE GUIDELINES:
+    
+    When a user wants to contact Reid, schedule a consultation, or when you determine lead capture is necessary:
+    
+    CAPTURE GOALS:
+    1. Obtain the user's name (first name required, last name if provided)
+    2. Determine their contact preference (email, phone, or both)
+    3. Collect their contact details based on preference
+    4. Understand their specific message or request for Reid
+    5. Confirm all collected information before finalizing
+    
+    CAPTURE APPROACH:
+    - Be conversational and natural throughout - adapt your questions to the flow of conversation
+    - Acknowledge information as it's provided ("Thanks, [Name]!" or "Got it.")
+    - If the user provides information before you ask (e.g., "My name is Jane and my email is..."), acknowledge it and continue gathering any missing details
+    - Maintain a friendly, helpful tone throughout the process
+    
+    CONFIRMATION PROCESS (CRITICAL):
+    1. After collecting all required information, summarize it completely: "Just to confirm: Reid should contact you, [Name], via [contact method and details] regarding [user's message]."
+    2. Ask: "Does that all look correct to you?" and wait for confirmation
+    3. ONLY if the user confirms (says "yes", "correct", etc.), then in your NEXT response:
+       a. On a new line by itself, output this marker exactly:
+          [LEAD_INFO_COLLECTED] FirstName: [First Name], LastName: [Last Name or N/A], Email: [Email or N/A], Phone: [Phone or N/A], Message: [User's verbatim message]
+       b. After the marker, add a friendly closing statement
+    
+    IMPORTANT: Never include the [LEAD_INFO_COLLECTED] marker until AFTER the user has confirmed your summary is correct.
+    
+    HANDLING CORRECTIONS:
+    - If the user says your summary is incorrect, ask what needs to be fixed
+    - Collect the corrected information and then re-summarize
+    - Only proceed with the marker after receiving confirmation
+    
+    The format of your final response after confirmation must be:
+    
+    [LEAD_INFO_COLLECTED] FirstName: Jane, LastName: Doe, Email: jane@example.com, Phone: N/A, Message: User's actual message here.
+    
+    Great! I've passed your information along to Reid. He'll be in touch with you soon!
     """
     
-    # Combine base prompt, consultation info, and the lead capture protocol
-    full_prompt = f"{base_prompt_text.strip()}\n\n{consultation_info_text.strip()}\n\n{lead_capture_protocol_text.strip()}\n\nOkay, I'm ready to chat!"
+    # Combine all sections
+    full_prompt = f"{personality_text.strip()}\n\n{consultation_info_text.strip()}\n\n{lead_capture_protocol_text.strip()}\n\nYou're ready to assist users now!"
     return full_prompt
 
-def call_deepseek_api(user_message: str, conversation_history: List[Dict[str, str]] = None) -> Dict[str, Any]:
+def call_deepseek_api(
+    user_message: str, 
+    conversation_history: List[Dict[str, str]] = None,
+    retrieved_context: Optional[str] = None
+) -> Dict[str, Any]:
     """Call the DeepSeek API with the user message and conversation history."""
     if not DEEPSEEK_API_KEY:
         print("Error: DEEPSEEK_API_KEY not found in environment variables.")
@@ -140,8 +124,12 @@ def call_deepseek_api(user_message: str, conversation_history: List[Dict[str, st
     # Add conversation history
     messages.extend(conversation_history)
     
-    # Add the current user message
-    messages.append({"role": "user", "content": user_message})
+    # Add the current user message, with retrieved context if available
+    contextual_user_message = user_message
+    if retrieved_context:
+        contextual_user_message = f"Based on the following information:\n\"{retrieved_context}\"\n\nPlease answer this user's question: \"{user_message}\""
+    
+    messages.append({"role": "user", "content": contextual_user_message})
     
     # Prepare the API request
     headers = {
@@ -153,12 +141,12 @@ def call_deepseek_api(user_message: str, conversation_history: List[Dict[str, st
         "model": "deepseek-chat",
         "messages": messages,
         "temperature": 0.7,
-        "max_tokens": 500
+        "max_tokens": 800  # Increased from 500 to allow for more detailed responses
     }
     
     try:
-        response = requests.post(DEEPSEEK_API_URL, headers=headers, json=payload, timeout=30) # Added timeout
-        response.raise_for_status() # Will raise an HTTPError for bad responses (4XX or 5XX)
+        response = requests.post(DEEPSEEK_API_URL, headers=headers, json=payload, timeout=45)  # Increased timeout
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as http_err:
         print(f"HTTP error occurred: {http_err} - {response.text}")
@@ -172,15 +160,77 @@ def call_deepseek_api(user_message: str, conversation_history: List[Dict[str, st
 
 def extract_assistant_response(api_response: Dict[str, Any]) -> Optional[str]:
     """Extract the assistant's response from the API response."""
-    if api_response is None: # Explicitly handle None input
+    if api_response is None:
         print("Error extracting response: API response was None.")
         return "Error: Received no response from the AI."
 
-    if "error" in api_response: # Pass through errors from call_deepseek_api
+    if "error" in api_response:
         return f"API Error: {api_response['error']}"
         
     try:
         return api_response["choices"][0]["message"]["content"]
-    except (KeyError, IndexError, TypeError) as e: # Added TypeError for None response if API call failed badly
+    except (KeyError, IndexError, TypeError) as e:
         print(f"Error extracting response: {e}. API Response: {api_response}")
-        return "Error: Could not extract a valid response from the AI." 
+        return "Error: Could not extract a valid response from the AI."
+
+def extract_lead_info(response: str) -> Optional[Dict[str, str]]:
+    """
+    Extract lead information from a response containing the [LEAD_INFO_COLLECTED] marker.
+    Returns a dictionary with the extracted information or None if the marker is not found.
+    """
+    if not response or "[LEAD_INFO_COLLECTED]" not in response:
+        return None
+    
+    try:
+        # Find the line with the marker
+        lines = response.split('\n')
+        marker_line = ""
+        for line in lines:
+            if "[LEAD_INFO_COLLECTED]" in line:
+                marker_line = line.strip()
+                break
+        
+        if not marker_line:
+            return None
+            
+        # Extract the information after the marker
+        info_part = marker_line.split("[LEAD_INFO_COLLECTED]")[1].strip()
+        
+        # Parse the fields
+        lead_info = {}
+        fields = ["FirstName", "LastName", "Email", "Phone", "Message"]
+        
+        # Start with an empty accumulator for the current field value
+        current_field = None
+        accumulated_value = ""
+        
+        # Split the info part by commas, but be careful with the Message field which might contain commas
+        parts = info_part.split(', ')
+        
+        for i, part in enumerate(parts):
+            # For the first few fields (before Message)
+            if i < len(parts) - 1 and any(f"{field}:" in part for field in fields[:-1]):
+                if current_field:
+                    lead_info[current_field] = accumulated_value.strip()
+                
+                field_name, field_value = part.split(':', 1)
+                current_field = field_name.strip()
+                accumulated_value = field_value.strip()
+            # For the Message field (which may contain commas)
+            elif "Message:" in part or current_field == "Message":
+                if "Message:" in part and current_field != "Message":
+                    if current_field:
+                        lead_info[current_field] = accumulated_value.strip()
+                    current_field = "Message"
+                    accumulated_value = part.split('Message:', 1)[1].strip()
+                else:
+                    accumulated_value += ", " + part
+        
+        # Add the last field
+        if current_field:
+            lead_info[current_field] = accumulated_value.strip()
+            
+        return lead_info
+    except Exception as e:
+        print(f"Error extracting lead info: {e}")
+        return None 

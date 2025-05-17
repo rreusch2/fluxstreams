@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    return jsonify(status="healthy"), 200
+    return jsonify(status="healthy", message="API is running correctly"), 200
 
 # This is important for Vercel to pick up the app
 # It should match the entrypoint in vercel.json if that's how it's configured,

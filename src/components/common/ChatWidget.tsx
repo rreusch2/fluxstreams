@@ -9,6 +9,7 @@ export interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: Date;
+  isForm?: boolean; // New property to identify form messages
 }
 
 interface ChatbotPayload {
@@ -27,8 +28,131 @@ const ChatWidget: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [leadCaptureMode, setLeadCaptureMode] = useState(false);
-  const [leadData, setLeadData] = useState<Record<string, string>>({});
+  // REMOVED: leadCaptureMode and leadData states, as the new form handles this directly.
+  // const [leadCaptureMode, setLeadCaptureMode] = useState(false);
+  // const [leadData, setLeadData] = useState<Record<string, string>>({});
+
+  // New states for contact form
+  const [isContactFormActive, setIsContactFormActive] = useState(false);
+  const [contactFormFields, setContactFormFields] = useState({
+    name: '',
+    contactMethod: 'email', // Still needed for frontend logic (to switch input type and for n8n conditional logic)
+    contactDetails: '',
+    message: '',
+  });
+  const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
+
+  const handleFormFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setContactFormFields(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleContactFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsTyping(true);
+    // Basic validation (can be expanded)
+    if (!contactFormFields.name || !contactFormFields.contactDetails || !contactFormFields.message) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Please fill out all required fields: Name, Contact Details, and Message.",
+        timestamp: new Date(),
+      }]);
+      setIsTyping(false);
+      return;
+    }
+
+    // console.log("Contact Form Submitted: ", contactFormFields); // Replace with actual submission logic
+
+    // Simulate API call for form submission
+    // await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Actual N8N Webhook Submission
+    const n8nWebhookUrl = 'https://rreusch2.app.n8n.cloud/webhook/62851cb6-e2f5-4e47-8cf8-c9a88a3ad270';
+    try {
+      const response = await fetch(n8nWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactFormFields),
+      });
+
+      if (!response.ok) {
+        // Attempt to get more error info from n8n if possible
+        const errorData = await response.json().catch(() => null); 
+        console.error('n8n webhook submission failed:', response.status, response.statusText, errorData);
+        throw new Error(`Webhook submission failed with status: ${response.status}`);
+      }
+      
+      // If response.ok, assume n8n processed it. n8n usually returns a success message.
+      const n8nResponse = await response.json(); 
+      console.log("N8N Webhook Response:", n8nResponse);
+
+      // Now, generate an AI confirmation message
+      // setIsTyping(true); // isTyping is already true from the start of handleContactFormSubmit
+      try {
+        const aiPromptForConfirmation = 
+          `You are Otto, a helpful and friendly AI assistant for Reusch Automate.
+          A user named "${contactFormFields.name}" has just submitted a message for Reid.
+          Their message summary is: "${contactFormFields.message.substring(0, 100)}${contactFormFields.message.length > 100 ? '...' : ''}"
+          (Their full contact method is ${contactFormFields.contactMethod} at ${contactFormFields.contactDetails})
+
+          Please craft a reassuring and slightly personalized confirmation message for "${contactFormFields.name}".
+          Acknowledge their message has been sent to Reid.
+          You can be a little witty, smart, or professional, adapting your tone.
+          Conclude by assuring them Reid will get the message. For example, "I'll make sure he gets this right away!" or "Consider it delivered to Reid's priority inbox!".`;
+
+        const confirmationPayload: ChatbotPayload = {
+          message: aiPromptForConfirmation,
+          conversation_history: messages.slice(-3).map(msg => ({ // Send last few messages for context
+            role: msg.role,
+            content: msg.content,
+          })),
+        };
+
+        const aiResponse = await fetch('/api/chatbot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(confirmationPayload),
+        });
+
+        if (!aiResponse.ok) {
+          const errorData = await aiResponse.json().catch(() => ({ error: "AI confirmation generation failed" }));
+          throw new Error(errorData.error || `AI confirmation HTTP error! status: ${aiResponse.status}`);
+        }
+
+        const aiData = await aiResponse.json();
+        
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: aiData.response, // Use AI's generated response
+          timestamp: new Date(),
+        }]);
+
+      } catch (aiError) {
+        console.error('Error generating AI confirmation:', aiError);
+        // Fallback to a simpler, hardcoded confirmation if AI fails
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Thanks, ${contactFormFields.name}! Your message has been successfully sent to Reid. I'll make sure he sees it!`, // Refined fallback
+          timestamp: new Date(),
+        }]);
+      } finally {
+        setIsContactFormActive(false);
+        setContactFormSubmitted(true); 
+        setContactFormFields({ name: '', contactMethod: 'email', contactDetails: '', message: '' }); 
+        setIsTyping(false); // Ensure typing is stopped
+      }
+
+    } catch (error) { // This is the catch for the n8n webhook submission
+      console.error('Error sending message to n8n webhook:', error); // Clarified error source
+      setMessages(prev => [...prev, { role: 'assistant', content: `Sorry, ${contactFormFields.name}, there was an issue sending your message through our system. Please try again shortly. (${error instanceof Error ? error.message : 'Unknown error'})`, timestamp: new Date() }]);
+      setIsTyping(false); // Ensure typing is stopped here too
+    }
+  };
 
   // Initial Greeting
   useEffect(() => {
@@ -36,13 +160,40 @@ const ChatWidget: React.FC = () => {
       if (messages.length === 0) {
         setIsTyping(true);
         try {
-          // Simulate API call for greeting
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          const greetingMessage = "Hi there! I'm the Reusch AI Assistant. You can ask me about AI topics, our services, or I can help you get in touch with Reid. What's on your mind?";
+          const greetings = [
+            // Your Favorite (Slightly refined for brand consistency)
+            "Hey! I'm Otto, the AI assistant for Reusch Automate. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can create smart AI solutions like this for your business too! So, what's on your mind?",
           
-          setMessages([{ role: 'assistant', content: greetingMessage, timestamp: new Date() }]);
-          // REMOVED: setTimeout that added "Here are a few things you can ask:" as a message
+            // Professional & Helpful
+            "Hello there! Otto here, your guide to Reusch Automate. Curious about how AI can streamline your operations, or need to connect with Reid, our founder? I'm ready to assist!",
+            "Greetings! I'm Otto, from Reusch Automate. My goal is to help you explore the potential of AI for your business. Ask me about our services, or let me know if you'd like to chat with Reid.",
+            "Welcome to Reusch Automate! I'm Otto, your AI-powered assistant. I can provide information on our custom automation solutions, discuss AI trends, or connect you with Reid. How can I help you today?",
+          
+            // Friendly & Casual (with a touch of humor/personality)
+            "Otto at your service! Think of me as the friendly AI face of Reusch Automate. I know a bit about AI, a lot about what Reid does, and I'm pretty good at fetching him if you need him. What can I do for you?",
+            "Alright, let's talk AI! I'm Otto, and I work with Reid at Reusch Automate to help businesses like yours. He's the human expert; I'm the charming AI. Ask me anything, or I can put you in touch with the 'creator' himself!",
+            "You've found Otto, Reusch Automate's very own AI helper! I'm here to answer your questions about our services, the magic of AI, or even to pass a message to Reid. What adventure shall we start with?",
+            "Beep boop... just kidding! I'm Otto, a sophisticated AI from Reusch Automate. Reid programmed me to be super helpful. Want to talk AI, learn about our services, or get a message to the boss? Lay it on me!",
+          
+            // Emphasizing Reid's Role
+            "Hi, I'm Otto! I assist Reid, the founder of Reusch Automate, in connecting with businesses looking for AI solutions. I can tell you about what we offer or help you schedule a chat with him. What are you looking for today?",
+            "Good day! Otto speaking, on behalf of Reusch Automate. Reid, my creator and our lead AI consultant, has equipped me to answer your initial questions about our services or help you reach out to him directly. How can I direct your inquiry?",
+          
+            // Shorter & Punchier
+            "Otto here, from Reusch Automate! Ready to dive into AI solutions or connect with Reid? Let's go!",
+            "Welcome! I'm Otto. Ask about Reusch Automate's services or AI, or let me get Reid for you. What's up?",
+          
+            // Focusing on Value
+            "Considering AI for your business? I'm Otto, and I can show you how Reusch Automate, led by Reid, makes it happen. Ask me about streamlining tasks or boosting efficiency!",
+            "Looking to automate and innovate? I'm Otto, your first stop at Reusch Automate. I can explain our AI services or connect you with our expert, Reid. How can we help you succeed today?"
+          ];
+          const randomIndex = Math.floor(Math.random() * greetings.length);
+          const greetingMessage = greetings[randomIndex];
+          
+          // Simulate a slight delay as if fetching, to make the typing indicator briefly visible
+          await new Promise(resolve => setTimeout(resolve, 500)); 
 
+          setMessages([{ role: 'assistant', content: greetingMessage, timestamp: new Date() }]);
         } catch (error) {
           console.error('Error fetching greeting:', error);
           setMessages([{ role: 'assistant', content: 'Hello! How can I help you today?', timestamp: new Date() }]);
@@ -57,11 +208,30 @@ const ChatWidget: React.FC = () => {
   }, []);
 
   const handleConversationStarterClick = (starter: ConversationStarter) => {
-    // Set the input to the submitText, so it appears in the chat history as what was "sent"
-    setInput(starter.submitText); 
-    // Directly call handleSubmit, passing the submitText as an override
-    const mockEvent = { preventDefault: () => {} } as React.FormEvent;
-    handleSubmit(mockEvent, starter.submitText);
+    const newUserMessage: Message = { role: 'user', content: starter.submitText, timestamp: new Date() };
+    setMessages(prev => [...prev, newUserMessage]);
+    setInput(''); // Clear input after clicking starter
+
+    if (starter.submitText.toLowerCase().includes("message reid")) {
+      setIsTyping(true);
+      // Simulate assistant thinking then presenting the form
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Got it! I'd be happy to help you get in touch with Reid. Please fill out the details below:",
+        timestamp: new Date()
+      }, {
+        role: 'assistant', // This message will render the form
+        content: '', // Content isn't text, but signals to render the form
+        isForm: true,
+        timestamp: new Date()
+      }]);
+      setIsContactFormActive(true); // Activate form mode
+      setIsTyping(false);
+    } else {
+      // Directly call handleSubmit for other starters, passing the submitText as an override
+      const mockEvent = { preventDefault: () => {} } as React.FormEvent;
+      handleSubmit(mockEvent, starter.submitText);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent, messageOverride?: string) => {
@@ -75,56 +245,63 @@ const ChatWidget: React.FC = () => {
     setMessages(updatedMessagesOnSubmit);
     setInput('');
     setIsTyping(true);
-    
-    try {
-      const conversationHistory = updatedMessagesOnSubmit // Use the version with the new user message
-        .slice(0, -1) // Exclude the current user message for history
-        .map(msg => ({
-          role: msg.role,
-          content: msg.content
-      }));
-      
-      const payload: ChatbotPayload = {
-        message: currentInput,
-        conversation_history: conversationHistory,
-      };
 
-      if (leadCaptureMode) {
-        payload.lead_capture_mode = true;
-        payload.lead_data = leadData;
-      }
-      
-      // Replace with your actual API call
-      const response = await fetch('/api/chatbot', {
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown server error" }));
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      
-      // REMOVED: Simulate API call
-      // await new Promise(resolve => setTimeout(resolve, 1500)); 
-      // const data = { response: `Simulated AI response to: "${currentInput}"`, lead_capture_mode: false, lead_data: {} };
-      
-      if (typeof data.lead_capture_mode === 'boolean') {
-        setLeadCaptureMode(data.lead_capture_mode);
-      }
-      if (typeof data.lead_data === 'object' && data.lead_data !== null) {
-        setLeadData(data.lead_data as Record<string, string>);
-      }
-      
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response, timestamp: new Date() }]);
-
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: `Sorry, I encountered an issue. Please try again. (${error instanceof Error ? error.message : 'Unknown error'})`, timestamp: new Date() }]);
-    } finally {
+    // Check for contact intent
+    const exactMatchPhrase = "i'd like to send a message to reid, please.";
+    if (currentInput.toLowerCase() === exactMatchPhrase || 
+        currentInput.toLowerCase().includes("contact reid")) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Got it! I'd be happy to help you get in touch with Reid. Please fill out the details below:",
+        timestamp: new Date()
+      }, {
+        role: 'assistant', // This message will render the form
+        content: '', // Content isn't text, but signals to render the form
+        isForm: true,
+        timestamp: new Date()
+      }]);
+      setIsContactFormActive(true); // Activate form mode
       setIsTyping(false);
+    } else {
+      // Only proceed with API call if not activating contact form
+      try {
+        const conversationHistory = updatedMessagesOnSubmit // Use the version with the new user message
+          .slice(0, -1) // Exclude the current user message for history
+          .map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
+        
+        const payload: ChatbotPayload = {
+          message: currentInput,
+          conversation_history: conversationHistory,
+        };
+
+        // Replace with your actual API call
+        const response = await fetch('/api/chatbot', {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: "Unknown server error" }));
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // REMOVED: Simulate API call
+        // await new Promise(resolve => setTimeout(resolve, 1500)); 
+        // const data = { response: `Simulated AI response to: "${currentInput}"`, lead_capture_mode: false, lead_data: {} };
+        
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response, timestamp: new Date() }]);
+
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setMessages(prev => [...prev, { role: 'assistant', content: `Sorry, I encountered an issue. Please try again. (${error instanceof Error ? error.message : 'Unknown error'})`, timestamp: new Date() }]);
+      } finally {
+        setIsTyping(false);
+      }
     }
   };
 
@@ -149,16 +326,25 @@ const ChatWidget: React.FC = () => {
       <div className="p-4 border-b border-slate-700"> {/* Increased padding for header */}
         <h3 className="flex items-center text-xl font-bold bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent"> {/* Adjusted size for balance */}
           <MessageSquare size={24} className="mr-3 text-teal-400 flex-shrink-0" /> {/* Slightly larger icon */}
-          <span>Reusch AI Assistant</span>
+          <span>Otto</span>
         </h3>
       </div>
 
       {/* Messages Area - Pass isTyping prop to MessageList */}
-      <MessageList messages={messages} isTyping={isTyping} /> 
+      {/* The MessageList component will need to be updated to render the form when message.isForm is true */}
+      <MessageList 
+        messages={messages} 
+        isTyping={isTyping}
+        // Pass form-related props
+        isContactFormActive={isContactFormActive}
+        contactFormFields={contactFormFields}
+        handleFormFieldChange={handleFormFieldChange}
+        handleContactFormSubmit={handleContactFormSubmit}
+      /> 
       
       {/* Conversation Starters (conditionally rendered) */}
       {/* Logic: Show if the initial greeting has been sent and there are few messages, implying it's early in the conversation. */}
-      {messages.length > 0 && messages.length < 4 && !isTyping && (
+      {messages.length > 0 && messages.length < 4 && !isTyping && !isContactFormActive && (
          <div className="p-3 border-t border-slate-700">
            <div className="flex flex-wrap justify-center gap-2"> {/* Centered starters */}
              {conversationStarters.map((starter, index) => (
@@ -174,13 +360,19 @@ const ChatWidget: React.FC = () => {
          </div>
       )}
 
-      {/* Input Area */}
-      <InputArea
-        input={input}
-        setInput={setInput}
-        handleSubmit={handleSubmit}
-        isTyping={isTyping} // Pass isTyping to disable input if needed
-      />
+      {/* Input Area or Contact Form Placeholder */}
+      {/* The actual form rendering will be handled by MessageList based on message.isForm */}
+      {!isContactFormActive ? (
+        <InputArea
+          input={input}
+          setInput={setInput}
+          handleSubmit={handleSubmit}
+          isTyping={isTyping} 
+        />
+      ) : (
+        // When contact form is active, MessageList handles rendering it, so no separate InputArea here.
+        null 
+      )}
     </div>
   );
 };
