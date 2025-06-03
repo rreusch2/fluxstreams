@@ -192,7 +192,7 @@ def chatbot():
 @limiter.limit("30 per minute") # Apply a slightly more relaxed limit for greetings
 def chatbot_greeting():
     """Return the initial greeting message for the chatbot."""
-    greeting = "Hey! I'm Otto, the AI assistant for Reusch Automate. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can build smart AI like me for your business too! So, what's on your mind?"
+    greeting = "Hey! I'm Otto, the AI assistant for Fluxstream. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can build smart AI like me for your business too! So, what's on your mind?"
     logger.info(f"Sending greeting: {greeting}")
     return jsonify({"greeting": greeting})
 

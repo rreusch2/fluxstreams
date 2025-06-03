@@ -95,7 +95,7 @@ const ChatWidget: React.FC = () => {
       // setIsTyping(true); // isTyping is already true from the start of handleContactFormSubmit
       try {
         const aiPromptForConfirmation = 
-          `You are Otto, a helpful and friendly AI assistant for Reusch Automate.
+          `You are Otto, a helpful and friendly AI assistant for Fluxstream.
           A user named "${contactFormFields.name}" has just submitted a message for Reid.
           Their message summary is: "${contactFormFields.message.substring(0, 100)}${contactFormFields.message.length > 100 ? '...' : ''}"
           (Their full contact method is ${contactFormFields.contactMethod} at ${contactFormFields.contactDetails})
@@ -103,7 +103,7 @@ const ChatWidget: React.FC = () => {
           Please craft a reassuring and slightly personalized confirmation message for "${contactFormFields.name}".
           Acknowledge their message has been sent to Reid.
           You can be a little witty, smart, or professional, adapting your tone.
-          Conclude by assuring them Reid will get the message. For example, "I'll make sure he gets this right away!" or "Consider it delivered to Reid's priority inbox!".`;
+          Conclude by assuring them Reid will get the message. For example, "I\'ll make sure he gets this right away!" or "Consider it delivered to Reid\'s priority inbox!".`;
 
         const confirmationPayload: ChatbotPayload = {
           message: aiPromptForConfirmation,
@@ -162,30 +162,30 @@ const ChatWidget: React.FC = () => {
         try {
           const greetings = [
             // Your Favorite (Slightly refined for brand consistency)
-            "Hey! I'm Otto, the AI assistant for Reusch Automate. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can create smart AI solutions like this for your business too! So, what's on your mind?",
+            "Hey! I\'m Otto, the AI assistant for Fluxstream. I can chat about AI, explain our services, or get you in touch with our experts, Reid and Jake. They are the ones who built me – and they can create smart AI solutions like me for your business too! So, what\'s on your mind?",
           
             // Professional & Helpful
-            "Hello there! Otto here, your guide to Reusch Automate. Curious about how AI can streamline your operations, or need to connect with Reid, our founder? I'm ready to assist!",
-            "Greetings! I'm Otto, from Reusch Automate. My goal is to help you explore the potential of AI for your business. Ask me about our services, or let me know if you'd like to chat with Reid.",
-            "Welcome to Reusch Automate! I'm Otto, your AI-powered assistant. I can provide information on our custom automation solutions, discuss AI trends, or connect you with Reid. How can I help you today?",
+            "Hello there! Otto here, your guide to Fluxstream. Curious about how AI can streamline your operations, or need to connect with Reid and Jake, our founders? I\'m ready to assist!",
+            "Greetings! I\'m Otto, from Fluxstream. My goal is to help you explore the potential of AI for your business. Ask me about our services, or let me know if you\'d like to chat with Reid and Jake.",
+            "Welcome to Fluxstream! I\'m Otto, your AI-powered assistant. I can provide information on our custom automation solutions, discuss AI trends, or connect you with our experts, Reid and Jake. How can I help you today?",
           
             // Friendly & Casual (with a touch of humor/personality)
-            "Otto at your service! Think of me as the friendly AI face of Reusch Automate. I know a bit about AI, a lot about what Reid does, and I'm pretty good at fetching him if you need him. What can I do for you?",
-            "Alright, let's talk AI! I'm Otto, and I work with Reid at Reusch Automate to help businesses like yours. He's the human expert; I'm the charming AI. Ask me anything, or I can put you in touch with the 'creator' himself!",
-            "You've found Otto, Reusch Automate's very own AI helper! I'm here to answer your questions about our services, the magic of AI, or even to pass a message to Reid. What adventure shall we start with?",
-            "Beep boop... just kidding! I'm Otto, a sophisticated AI from Reusch Automate. Reid programmed me to be super helpful. Want to talk AI, learn about our services, or get a message to the boss? Lay it on me!",
+            "Otto at your service! Think of me as the friendly AI face of Fluxstream. I know a bit about AI, a lot about what our team does, and I\'m pretty good at fetching our experts if you need them. What can I do for you?",
+            "Alright, let\'s talk AI! I\'m Otto, and I work with our founders, Reid and Jake, at Fluxstream to help businesses like yours. They\'re the human experts; I\'m the charming AI. Ask me anything, or I can put you in touch with highly skilled experts!",
+            "You\'ve found Otto, Fluxstream\'s very own AI helper! I\'m here to answer your questions about our services, the magic of AI, or even to pass a message to our team. What adventure shall we start with?",
+            "Hacking into your computer... just kidding! I\'m Otto, a sophisticated AI from Fluxstream. Our team programmed me to be super helpful. Want to talk AI, learn about our services, or get a message to the bosses? Lay it on me!",
           
-            // Emphasizing Reid's Role
-            "Hi, I'm Otto! I assist Reid, the founder of Reusch Automate, in connecting with businesses looking for AI solutions. I can tell you about what we offer or help you schedule a chat with him. What are you looking for today?",
-            "Good day! Otto speaking, on behalf of Reusch Automate. Reid, my creator and our lead AI consultant, has equipped me to answer your initial questions about our services or help you reach out to him directly. How can I direct your inquiry?",
+            // Emphasizing Reid\'s Role
+            "Hi, I\'m Otto! I assist Reid and Jake, the co-founders of Fluxstream, in connecting with businesses looking for AI solutions. I can tell you about what we offer or help you schedule a chat with them. What are you looking for today?",
+            "Good day! Otto speaking, on behalf of Fluxstream. Reid and Jake, my creators and our lead AI consultants, have equipped me to answer your initial questions about our services or help you reach out to our team directly. How can I direct your inquiry?",
           
             // Shorter & Punchier
-            "Otto here, from Reusch Automate! Ready to dive into AI solutions or connect with Reid? Let's go!",
-            "Welcome! I'm Otto. Ask about Reusch Automate's services or AI, or let me get Reid for you. What's up?",
+            "Otto here, from Fluxstream! Ready to dive into AI solutions or connect with our experts? Let\'s go!",
+            "Welcome! I\'m Otto. Ask about Fluxstream\'s services or AI, or let me send a message our experts for you. What\'s up?",
           
             // Focusing on Value
-            "Considering AI for your business? I'm Otto, and I can show you how Reusch Automate, led by Reid, makes it happen. Ask me about streamlining tasks or boosting efficiency!",
-            "Looking to automate and innovate? I'm Otto, your first stop at Reusch Automate. I can explain our AI services or connect you with our expert, Reid. How can we help you succeed today?"
+            "Considering AI for your business? I\'m Otto, and I can show you how Fluxstream makes it happen. Ask me about streamlining tasks, boosting efficiency, or I can help you get in contact with our team!",
+            "Looking to automate and innovate? I\'m Otto, your first stop at Fluxstream. I can explain our AI services or connect you with our experts, Reid and Jake. How can we help you succeed today?"
           ];
           const randomIndex = Math.floor(Math.random() * greetings.length);
           const greetingMessage = greetings[randomIndex];

@@ -6,7 +6,7 @@ const Testimonials: React.FC = () => {
   
   const testimonials = [
     {
-      quote: "The free AI consultation was incredibly valuable. The Reusch Automate team identified automation opportunities we hadn't even considered, with projected savings of over $50,000 annually.",
+      quote: "The free AI consultation was incredibly valuable. The Fluxstream team identified automation opportunities we hadn't even considered, with projected savings of over $50,000 annually.",
       author: "Sarah J.",
       role: "Operations Director",
       company: "Global Logistics Inc."

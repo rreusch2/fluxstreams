@@ -1,25 +1,25 @@
-# PRD.txt - Phase 1: AI Chatbot Foundation & Contact Backend for Reusch Automate
+# PRD.txt - Phase 1: AI Chatbot Foundation & Contact Backend for Fluxstream
 
 # Overview
-This document outlines the foundational requirements for developing and integrating an AI-powered chatbot onto the Contact Page of the Reusch Automate website. This phase also includes creating a robust backend using n8n to handle contact form submissions and store them in Google Sheets. The primary goals for this phase are to:
+This document outlines the foundational requirements for developing and integrating an AI-powered chatbot onto the Contact Page of the Fluxstream website. This phase also includes creating a robust backend using n8n to handle contact form submissions and store them in Google Sheets. The primary goals for this phase are to:
 1. Establish the backend infrastructure for future AI capabilities.
 2. Implement a functional contact form system.
 3. Introduce a basic AI chatbot on the contact page that can engage users, answer very general queries using its inherent knowledge, and capture leads when it cannot answer or when a user requests contact.
-This initial setup will serve as a live demonstration of Reusch Automate' technical direction and provide immediate utility through the contact form and basic chat interaction.
+This initial setup will serve as a live demonstration of Fluxstream' technical direction and provide immediate utility through the contact form and basic chat interaction.
 
 # Core Features (Phase 1 Focus)
 
 1.  **Contact Form Backend (n8n & Google Sheets):**
     * **What it does:** Securely processes submissions from the existing website contact form, sends email notifications, and logs submissions to a Google Sheet.
     * **Why it's important:** Provides a reliable lead capture mechanism and organized storage of inquiries.
-    * **How it works (high-level):** Frontend contact form (on Vercel) submits data to an n8n webhook. The n8n workflow validates data, sends an email notification to a Reusch Automate email address, and appends the submission details to a designated Google Sheet.
+    * **How it works (high-level):** Frontend contact form (on Vercel) submits data to an n8n webhook. The n8n workflow validates data, sends an email notification to a Fluxstream email address, and appends the submission details to a designated Google Sheet.
     * **Note:** Specific Google Sheet setup (columns, sheet name) and email notification details will be configured manually by Reid later. This PRD focuses on the n8n workflow structure.
 
 2.  **AI Chatbot - Foundational Interaction (Python/Flask & DeepSeek API):**
     * **What it does:** Provides a conversational interface on the contact page. For this phase, it will:
-        * Automatically greet users visiting the Contact Page with a friendly, conversational message outlining its general capabilities (e.g., "Hi there! I'm the AI assistant for Reusch Automate. You can ask me about AI topics, our services in general, or I can help you get in touch with Reid. What's on your mind?").
+        * Automatically greet users visiting the Contact Page with a friendly, conversational message outlining its general capabilities (e.g., "Hi there! I'm the AI assistant for Fluxstream. You can ask me about AI topics, our services in general, or I can help you get in touch with Reid. What's on your mind?").
         * Engage in general conversation on AI topics, business, or provide general advice using the `deepseek-chat` model's inherent knowledge.
-        * Answer very basic, explicitly programmed questions about "Reusch Automate" (e.g., "What is Reusch Automate?").
+        * Answer very basic, explicitly programmed questions about "Fluxstream" (e.g., "What is Fluxstream?").
         * Implement safety guardrails: Decline to answer questions about its specific AI model, confidential website/business information, or illegal topics. It will respond with something like, "Sorry, I can't answer that specific question." or "I'm not able to provide details on that."
         * Handle lead capture when it cannot answer appropriately or when the user indicates they want to contact someone: It will collect the user's name, email, and their message/query.
     * **Why it's important:** Establishes the chatbot presence, showcases interactivity, provides a channel for initial engagement, and sets up the lead capture mechanism.
@@ -30,7 +30,7 @@ This initial setup will serve as a live demonstration of Reusch Automate' techni
 
 3.  **Knowledge Base & RAG Preparation (Out of Scope for THIS PRD's Task Generation):**
     * **Note for Task-Master:** The creation of detailed business documents, FAQs, service descriptions for a full knowledge base, and the implementation of the RAG (Retrieval Augmented Generation) pipeline (embedding, vector search) are **deferred** to a later phase.
-    * For this phase, the chatbot will rely primarily on the `deepseek-chat` model's general knowledge and explicitly programmed basic information about "Reusch Automate" within its system prompt or simple logic.
+    * For this phase, the chatbot will rely primarily on the `deepseek-chat` model's general knowledge and explicitly programmed basic information about "Fluxstream" within its system prompt or simple logic.
 
 # User Experience (Phase 1 - Chatbot on Contact Page)
 
@@ -38,21 +38,21 @@ This initial setup will serve as a live demonstration of Reusch Automate' techni
     * Potential Client (Small/Medium Business Owner)
     * Tech-Savvy Individual
 * **Key User Flows (Chatbot - Phase 1):**
-    1.  User lands on Contact Page -> Chatbot automatically types out a friendly, conversational greeting, introducing itself and mentioning it can discuss AI, Reusch Automate generally, or help the user get in touch/take a message.
+    1.  User lands on Contact Page -> Chatbot automatically types out a friendly, conversational greeting, introducing itself and mentioning it can discuss AI, Fluxstream generally, or help the user get in touch/take a message.
     2.  User asks a general question (AI, business, etc.) -> Chatbot responds using DeepSeek.
     3.  User asks a question the chatbot is programmed not to answer (e.g., "What model are you?") -> Chatbot politely declines.
     4.  Chatbot determines it cannot adequately answer or user wants to leave a message -> Chatbot initiates lead capture: "I can help you with that. Could I get your name and email so Reid can follow up?" followed by "And what's your message or question for him?".
     5.  User asks to schedule a consultation -> Chatbot (for this phase) responds: "Reid can definitely help with that! Please leave your name, email, and a brief note on what you'd like to discuss, and he'll get back to you to schedule a time." (This then follows the lead capture flow).
 * **UI/UX Considerations (Chatbot):**
     * Placement: Prominently on the Contact Page.
-    * Clear indication it's an AI assistant for "Reusch Automate."
+    * Clear indication it's an AI assistant for "Fluxstream."
     * Initial greeting should appear dynamically (e.g., simulated typing).
-    * Chatbot personality/tone: Conversational, casual, user-friendly, cool, but professional when discussing business or taking messages. Should use "Reusch Automate" when appropriate.
+    * Chatbot personality/tone: Conversational, casual, user-friendly, cool, but professional when discussing business or taking messages. Should use "Fluxstream" when appropriate.
 
 # Technical Architecture (Phase 1)
 
 * **System Components:**
-    1.  **Frontend:** Existing Reusch Automate website (Vercel hosted). New chat widget/interface on Contact Page.
+    1.  **Frontend:** Existing Fluxstream website (Vercel hosted). New chat widget/interface on Contact Page.
     2.  **Backend API (Chatbot):** Python Flask application deployed as Vercel Serverless Functions.
         * Endpoint: `/api/chatbot` (handles chat messages, lead capture forwarding to n8n).
     3.  **Backend Workflow (Contact Form & Chat Lead Logging):** n8n (existing subscription).
@@ -93,7 +93,7 @@ This initial setup will serve as a live demonstration of Reusch Automate' techni
     2.  Create `/api/chatbot` endpoint:
         * Accept user messages.
         * Securely load and use DeepSeek API key.
-        * Implement logic to construct initial system prompts (defining persona, business name "Reusch Automate", safety guidelines/topics to avoid).
+        * Implement logic to construct initial system prompts (defining persona, business name "Fluxstream", safety guidelines/topics to avoid).
         * Call DeepSeek API (`deepseek-chat` model) with user message and system prompt.
         * Implement logic for lead capture: If a certain intent is detected or if the chatbot is "stuck", formulate a request for user name/email/message.
         * If lead information is captured, make an HTTP POST request to the designated n8n webhook (from A.2) to pass this data.

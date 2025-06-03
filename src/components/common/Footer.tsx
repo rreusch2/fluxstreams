@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
             <div className="flex items-center mb-4">
               <Cpu className="h-6 w-6 mr-2 text-teal-400" />
               <span className="font-bold text-xl bg-gradient-to-r from-teal-400 to-indigo-500 bg-clip-text text-transparent">
-                Reusch Automate
+                Fluxstream
               </span>
             </div>
             <p className="text-slate-300 text-base md:text-lg mb-4 leading-relaxed">
@@ -67,7 +67,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
         
         <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-slate-400">
-            &copy; {new Date().getFullYear()} Reusch Automate. All rights reserved.
+            &copy; {new Date().getFullYear()} Fluxstream. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 text-sm text-slate-400">
             <a href="#" className="hover:text-teal-400 transition-colors">Privacy Policy</a>

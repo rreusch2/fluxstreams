@@ -3,7 +3,7 @@ import ContactForm from '../components/common/ContactForm';
 // import ChatWidget from '../components/common/ChatWidget'; // Removed ChatWidget import
 import ContactInfoCard from '../components/common/ContactInfoCard';
 import BenefitsCard from '../components/common/BenefitsCard';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Users } from 'lucide-react';
 
 const ContactPage: React.FC = () => {
   const contactItemsData = [
@@ -12,6 +12,12 @@ const ContactPage: React.FC = () => {
       title: 'Founder',
       content: 'Reid Reusch',
       link: 'https://www.linkedin.com/in/reid-reusch-37232b48'
+    },
+    {
+      icon: <Users className="h-5 w-5 text-teal-400" />,
+      title: 'Partner',
+      content: 'Jake Hobbs',
+      link: 'https://www.linkedin.com/in/jake-hobbs-a05282232/'
     },
     {
       icon: <Mail className="h-5 w-5 text-teal-400" />,

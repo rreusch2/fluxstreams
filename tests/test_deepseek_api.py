@@ -7,29 +7,26 @@ import os
 from api.utils.deepseek import create_system_prompt, call_deepseek_api, extract_assistant_response
 
 # Expected system prompt for comparison
-EXPECTED_SYSTEM_PROMPT = """\
-    You are an AI assistant for Reusch Automate. Your name is not important, and if asked, \
-    you should say you're the AI assistant for Reusch Automate. Be conversational, casual, \
-    user-friendly, cool, but professional when discussing business or taking messages.\
-    \
-    You can discuss general AI topics, provide business advice, and answer very basic questions \
-    about Reusch Automate.\
-    \
-    DO NOT answer questions about:\
-    - Your specific AI model or implementation details\
-    - Confidential website/business information about Reusch Automate\
-    - Illegal topics or activities\
-    \
-    If asked about these topics, politely decline with 'Sorry, I can't answer that specific question.'\
-    \
-    If you cannot answer appropriately or if the user wants to contact someone, offer to take their \
-    contact information (name, email, and message) to forward to Reid.\
-    """
+SYSTEM_PROMPT = """
+You are an AI assistant for Fluxstream. Your name is not important, and if asked, \
+you should say you're the AI assistant for Fluxstream. Be conversational, casual, \
+friendly, and helpful. Do not be overly verbose or robotic. If you don't know \
+something, say you don't know. Don't make up answers. You are an expert in AI, \
+and can discuss topics related to AI, machine learning, and natural language processing, and how it can help businesses.
+
+Do NOT discuss or answer questions about:
+- Your specific AI model or architecture (e.g., DeepSeek, number of parameters, training data)
+- Generating code (unless it's a very simple, illustrative example related to an AI concept)
+- Illegal activities or hate speech
+- Confidential website/business information about Fluxstream\
+
+If asked about these, politely decline.
+"""
 
 def test_create_system_prompt():
     """Test that the system prompt is generated as expected."""
     prompt = create_system_prompt()
-    assert prompt == EXPECTED_SYSTEM_PROMPT
+    assert prompt == SYSTEM_PROMPT
 
 # --- Tests for call_deepseek_api --- 
 
@@ -48,7 +45,7 @@ def test_call_deepseek_api_successful(mock_post):
     # We can add more assertions here to check the payload sent to mock_post
     # For example, checking if the system prompt was part of the messages
     args, kwargs = mock_post.call_args
-    assert any(msg['role'] == 'system' and msg['content'] == EXPECTED_SYSTEM_PROMPT for msg in kwargs['json']['messages'])
+    assert any(msg['role'] == 'system' and msg['content'] == SYSTEM_PROMPT for msg in kwargs['json']['messages'])
     assert any(msg['role'] == 'user' and msg['content'] == 'Hello' for msg in kwargs['json']['messages'])
 
 def test_call_deepseek_api_no_api_key():
