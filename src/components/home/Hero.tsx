@@ -1,111 +1,87 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../common/Button';
 import ChatWidget from '../common/ChatWidget';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
-import type { Engine } from 'tsparticles-engine';
-import { useCallback } from 'react';
+import Particles, { initParticlesEngine } from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import type { Engine } from '@tsparticles/engine';
 
 interface HeroProps {
   navigateTo: (page: string) => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine as any);
+  const [particlesInitialized, setParticlesInitialized] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine: Engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setParticlesInitialized(true);
+    });
   }, []);
 
+  const particleOptions = {
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: 'repulse',
+        },
+        onClick: {
+          enable: true,
+          mode: 'push',
+        },
+      },
+      modes: {
+        grab: { distance: 140, links: { opacity: 0.5 } },
+        bubble: { distance: 200, size: 20, duration: 2, opacity: 0.8 },
+        repulse: { distance: 100, duration: 0.4 },
+        push: { quantity: 4 },
+        remove: { quantity: 2 },
+      },
+    },
+    particles: {
+      color: { value: ['#06b6d4', '#818cf8', '#6366f1'] },
+      links: {
+        color: '#475569',
+        distance: 150,
+        enable: true,
+        opacity: 0.2,
+        width: 1,
+      },
+      collisions: { enable: true },
+      move: {
+        direction: 'none' as const,
+        enable: true,
+        outModes: { default: 'bounce' as const },
+        random: false,
+        speed: 0.5,
+        straight: false,
+      },
+      number: {
+        value: 80,
+      },
+      opacity: { value: 0.4 },
+      shape: { type: 'circle' as const },
+      size: { value: { min: 1, max: 3 } },
+    },
+    detectRetina: true,
+    fullScreen: {
+      enable: true,
+      zIndex: -1,
+    },
+  };
+
+  if (!particlesInitialized) {
+    return <div className="relative min-h-screen flex items-center text-white overflow-hidden py-20 bg-slate-900"></div>;
+  }
+  
   return (
     <section className="relative min-h-screen flex items-center text-white overflow-hidden py-20 bg-slate-900">
       <Particles
         id="tsparticles"
-        init={particlesInit}
-        options={{
-          fpsLimit: 60,
-          interactivity: {
-            events: {
-              onHover: {
-                enable: true,
-                mode: 'repulse',
-              },
-              onClick: {
-                enable: true,
-                mode: 'push',
-              },
-              resize: true,
-            },
-            modes: {
-              grab: {
-                distance: 140,
-                links: {
-                  opacity: 0.5,
-                },
-              },
-              bubble: {
-                distance: 200,
-                size: 20,
-                duration: 2,
-                opacity: 0.8,
-              },
-              repulse: {
-                distance: 100,
-                duration: 0.4,
-              },
-              push: {
-                quantity: 4,
-              },
-              remove: {
-                quantity: 2,
-              },
-            },
-          },
-          particles: {
-            color: {
-              value: ['#06b6d4', '#818cf8', '#6366f1'],
-            },
-            links: {
-              color: '#475569',
-              distance: 150,
-              enable: true,
-              opacity: 0.2,
-              width: 1,
-            },
-            collisions: {
-              enable: true,
-            },
-            move: {
-              direction: 'none',
-              enable: true,
-              outModes: {
-                default: 'bounce',
-              },
-              random: false,
-              speed: 0.5,
-              straight: false,
-            },
-            number: {
-              density: {
-                enable: true,
-                area: 800,
-              },
-              value: 60,
-            },
-            opacity: {
-              value: 0.4,
-            },
-            shape: {
-              type: 'circle',
-            },
-            size: {
-              value: { min: 1, max: 3 },
-            },
-          },
-          detectRetina: true,
-          fullScreen: {
-            enable: true,
-            zIndex: -1
-          }
-        }}
+        options={particleOptions}
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
       
