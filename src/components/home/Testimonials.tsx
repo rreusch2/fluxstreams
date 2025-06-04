@@ -42,10 +42,10 @@ const Testimonials: React.FC = () => {
     <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight" data-aos="fade-up">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
             What Our Clients Are <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Saying</span>
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
             Real results from businesses that have transformed their operations with our AI solutions.
           </p>
         </div>
@@ -53,12 +53,7 @@ const Testimonials: React.FC = () => {
         {/* Desktop & Tablet View */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div 
-              key={index}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
-              data-aos-duration="1000"
-            >
+            <div key={index}>
               <TestimonialCard
                 quote={testimonial.quote}
                 author={testimonial.author}

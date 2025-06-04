@@ -15,8 +15,8 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Centered Hero Content */}
         <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fadeIn tracking-tight leading-tight">
+          {/* Main Heading - Removed animate-fadeIn for cleaner look */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-tight">
             <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
               Transform Your Business
             </span>
@@ -26,19 +26,19 @@ const Hero: React.FC<HeroProps> = ({ navigateTo }) => {
             </span>
           </h1>
           
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-12 animate-fadeInUp leading-relaxed max-w-3xl mx-auto">
+          {/* Subtitle - Simple fade-in */}
+          <p className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-3xl mx-auto opacity-0 animate-[fadeIn_0.6s_ease-out_0.3s_forwards]">
             We craft AI automations to streamline your operations, 
             boost efficiency, and secure your competitive edge in the digital future.
           </p>
           
-          {/* Call-to-Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeInUp max-w-xl mx-auto">
+          {/* Call-to-Action Buttons - Simple fade-in */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-xl mx-auto opacity-0 animate-[fadeIn_0.6s_ease-out_0.6s_forwards]">
             <Button 
               variant="primary" 
               size="lg" 
               onClick={() => navigateTo('contact')}
-              className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white font-semibold shadow-2xl hover:shadow-cyan-500/25 transform hover:scale-105 transition-all duration-300 ease-in-out py-3 px-8 text-lg rounded-xl w-full sm:w-auto"
+              className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white font-semibold shadow-xl hover:shadow-cyan-500/25 transform hover:scale-[1.02] transition-all duration-300 ease-in-out py-3 px-8 text-lg rounded-xl w-full sm:w-auto"
             >
               Book Your Free AI Consultation →
             </Button>

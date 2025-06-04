@@ -45,17 +45,21 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
       AOS.init({
-        duration: 800,
+        duration: 600,
         once: true,
-        offset: 100,
-        easing: 'ease-out-cubic',
+        offset: 150,
+        easing: 'ease-out',
         mirror: false,
         anchorPlacement: 'top-bottom',
-        disable: 'mobile'
+        disable: window.innerWidth < 768
       });
       
+      let timeout;
       window.addEventListener('resize', () => {
-        AOS.refresh();
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          AOS.refresh();
+        }, 100);
       });
     </script>
   </body>

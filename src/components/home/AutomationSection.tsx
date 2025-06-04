@@ -11,7 +11,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
     <section className="py-16 md:py-24 bg-slate-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 md:mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight" data-aos="fade-up">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
             Custom AI Solutions, <span className="bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Built For You</span>
           </h2>
           <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
@@ -21,7 +21,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           {/* Left Column - Automation Diagram */}
-          <div className="relative bg-white rounded-xl shadow-xl p-8 md:p-10 overflow-hidden order-2 lg:order-1" data-aos="fade-right">
+          <div className="relative bg-white rounded-xl shadow-xl p-8 md:p-10 overflow-hidden order-2 lg:order-1">
             {/* Decorative background elements */}
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-indigo-100 rounded-full"></div>
             <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-teal-100 rounded-full"></div>
@@ -104,7 +104,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
           </div>
           
           {/* Right Column - Text Content */}
-          <div className="order-1 lg:order-2" data-aos="fade-left">
+          <div className="order-1 lg:order-2">
             <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 tracking-tight">
               Seamless Integration With Your Existing Systems
             </h3>
