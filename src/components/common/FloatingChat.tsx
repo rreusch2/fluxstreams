@@ -32,6 +32,7 @@ const FloatingChat: React.FC = () => {
         <div 
           className="fixed bottom-4 md:bottom-6 right-4 md:right-6 z-50 cursor-pointer group"
           onClick={toggleChat}
+          aria-label="Open chat"
         >
           <div className="relative">
             {/* Main chat bubble */}
@@ -46,7 +47,7 @@ const FloatingChat: React.FC = () => {
             
             {/* Hover tooltip - Hidden on mobile */}
             <div className="hidden md:block absolute bottom-full right-0 mb-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-              Chat with Otto
+              Chat with Flux
               <div className="absolute top-full right-4 border-4 border-transparent border-t-slate-800"></div>
             </div>
           </div>
@@ -59,7 +60,7 @@ const FloatingChat: React.FC = () => {
           className={`fixed z-50 transition-all duration-300 ${
             isMobile
               ? 'inset-0 m-0' // Full screen on mobile
-              : 'bottom-6 right-6 h-[700px] w-[480px]' // Fixed size on desktop
+              : 'bottom-6 right-6 h-[680px] w-[400px]' // Slightly larger size
           }`}
         >
           <div 
@@ -68,15 +69,16 @@ const FloatingChat: React.FC = () => {
             }`}
           >
             {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 md:p-5 border-b border-slate-700 bg-slate-800/90 shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-white font-semibold text-base md:text-lg">Otto - AI Assistant</span>
+            <div className="flex items-center justify-between p-3 border-b border-slate-700 bg-slate-800/90 shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-white font-semibold text-base">Flux - AI Assistant</span>
               </div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={toggleChat}
-                  className="text-slate-400 hover:text-white transition-colors p-1.5 md:p-2 rounded hover:bg-slate-700"
+                  className="text-slate-400 hover:text-white transition-colors p-1.5 rounded hover:bg-slate-700"
+                  aria-label="Close chat"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -84,7 +86,7 @@ const FloatingChat: React.FC = () => {
             </div>
 
             {/* Chat Content - Full Height with proper flex */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 overflow-hidden">
               <ChatWidget />
             </div>
           </div>

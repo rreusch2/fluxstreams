@@ -75,13 +75,13 @@ def parse_lead_details(text: str) -> dict:
 def chat():
     try:
         data = request.get_json()
-        
+    
         if not data or 'message' not in data:
             return jsonify({"error": "No message provided"}), 400
             
         user_message = data.get('message', '').strip()
         conversation_history = data.get('conversation_history', [])
-        
+
         # Validate conversation history
         if not is_valid_conversation_history(conversation_history):
             return jsonify({"error": "Invalid conversation history format"}), 400
@@ -122,7 +122,7 @@ def chat():
 @limiter.limit("30 per minute") # Apply a slightly more relaxed limit for greetings
 def chatbot_greeting():
     """Return the initial greeting message for the chatbot."""
-    greeting = "Hey! I'm Otto, the AI assistant for Fluxstream. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can build smart AI like me for your business too! So, what's on your mind?"
+    greeting = "Hey! I'm Flux, the AI assistant for Fluxstream. I can chat about AI, explain our services, or get you in touch with Reid. He's the one who built me – and he can build smart AI like me for your business too! So, what's on your mind?"
     logger.info(f"Sending greeting: {greeting}")
     return jsonify({"greeting": greeting})
 

@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
-import TypingIndicator from './TypingIndicator'; // Import TypingIndicator
-import { Message } from './ChatWidget'; // Assuming Message type is exported from ChatWidget
+import TypingIndicator from './TypingIndicator';
+import { Message } from './ChatWidget';
 
 interface MessageListProps {
   messages: Message[];
-  isTyping: boolean; // New prop
-  // Props for contact form
+  isTyping: boolean;
   isContactFormActive: boolean;
   contactFormFields: {
     name: string;
@@ -18,8 +17,8 @@ interface MessageListProps {
   handleContactFormSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ 
-  messages, 
+const MessageList: React.FC<MessageListProps> = ({
+  messages,
   isTyping,
   isContactFormActive,
   contactFormFields,
@@ -29,49 +28,59 @@ const MessageList: React.FC<MessageListProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isTyping]); // Also scroll when typing indicator appears/disappears
+  }, [messages, isTyping]);
 
   return (
-    <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 bg-slate-900/50 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800/50">
+    <div className="flex-grow overflow-y-auto !overflow-y-auto p-3 md:p-4 space-y-2">
       {messages.map((msg, index) => {
         if (msg.isForm && isContactFormActive) {
           return (
-            // Render the contact form here
-            <form key={`form-${index}`} onSubmit={handleContactFormSubmit} className="p-4 space-y-3 bg-slate-700/80 backdrop-blur-sm rounded-lg my-2 shadow-lg border border-slate-600">
+            <div key={`form-${index}`} className="flex justify-start">
+              <div className="bg-slate-700/80 backdrop-blur-sm rounded-lg shadow-lg border border-slate-600 p-3 max-w-[90%] md:max-w-[80%] w-full">
+            <form
+              onSubmit={handleContactFormSubmit}
+                  className="space-y-3"
+            >
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-200 mb-1">Your Name*</label>
+                <label htmlFor="name" className="block text-sm font-medium text-slate-200 mb-1">
+                  Your Name*
+                </label>
                 <input
                   type="text"
                   name="name"
                   id="name"
                   value={contactFormFields.name}
                   onChange={handleFormFieldChange}
-                  className="w-full p-2.5 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400"
+                      className="w-full p-2 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400 text-sm"
                   placeholder="e.g., Jane Doe"
                   required
                 />
               </div>
+
               <div>
-                <label htmlFor="contactMethod" className="block text-sm font-medium text-slate-200 mb-1">How to contact you?*</label>
+                <label htmlFor="contactMethod" className="block text-sm font-medium text-slate-200 mb-1">
+                  How to contact you?*
+                </label>
                 <select
                   name="contactMethod"
                   id="contactMethod"
                   value={contactFormFields.contactMethod}
                   onChange={handleFormFieldChange}
-                  className="w-full p-2.5 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="w-full p-2 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm"
                 >
                   <option value="email">Email</option>
                   <option value="phone">Phone</option>
                 </select>
               </div>
+
               <div>
                 <label htmlFor="contactDetails" className="block text-sm font-medium text-slate-200 mb-1">
-                  Your {contactFormFields.contactMethod === 'email' ? 'Email Address' : 'Phone Number'}*
+                  {contactFormFields.contactMethod === 'email' ? 'Email Address*' : 'Phone Number*'}
                 </label>
                 <input
                   type={contactFormFields.contactMethod === 'email' ? 'email' : 'tel'}
@@ -79,38 +88,55 @@ const MessageList: React.FC<MessageListProps> = ({
                   id="contactDetails"
                   value={contactFormFields.contactDetails}
                   onChange={handleFormFieldChange}
-                  className="w-full p-2.5 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400"
-                  placeholder={contactFormFields.contactMethod === 'email' ? 'you@example.com' : 'e.g., (555) 123-4567'}
+                      className="w-full p-2 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400 text-sm"
+                  placeholder={contactFormFields.contactMethod === 'email' ? 'you@example.com' : '(555) 123-4567'}
                   required
                 />
               </div>
+
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-200 mb-1">Your Message*</label>
+                <label htmlFor="message" className="block text-sm font-medium text-slate-200 mb-1">
+                  Your Message*
+                </label>
                 <textarea
                   name="message"
                   id="message"
-                  rows={4}
+                      rows={3}
                   value={contactFormFields.message}
                   onChange={handleFormFieldChange}
-                  className="w-full p-2.5 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400"
+                      className="w-full p-2 bg-slate-800 border border-slate-600 rounded-md text-slate-100 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400 text-sm"
                   placeholder="What would you like to discuss with Reid?"
                   required
                 />
               </div>
+
               <button
                 type="submit"
-                className="w-full px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-md shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-700 disabled:opacity-70 disabled:cursor-not-allowed"
-                disabled={isTyping}
+                    className="w-full px-3 py-2 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-md shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-700 disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-500/25 text-sm"
               >
-                {isTyping ? 'Sending...' : 'Send Message to Reid'}
+                Send Message to Reid
               </button>
             </form>
+              </div>
+            </div>
           );
         }
         return <MessageItem key={index} message={msg} />;
       })}
-      {isTyping && !isContactFormActive && <TypingIndicator />} {/* Render TypingIndicator only if not in form mode or if form typing is handled differently */}
-      <div ref={messagesEndRef} /> {/* This empty div is the target for scrolling */}
+      
+      {isTyping && !isContactFormActive && (
+        <div className="flex justify-start">
+          <div className="bg-slate-700/50 rounded-2xl px-3 py-2 max-w-[85%] md:max-w-[75%]">
+            <div className="flex space-x-1.5">
+              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div ref={messagesEndRef} />
     </div>
   );
 };

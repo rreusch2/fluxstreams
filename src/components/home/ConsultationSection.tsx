@@ -29,15 +29,17 @@ const ConsultationSection: React.FC<ConsultationSectionProps> = ({ navigateTo })
           {/* Left Column - Content */}
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              Discover Your AI Potential
-              <span className="block mt-2 bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">
-                For Free
+              <span className="bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent">
+                Discover Your AI Potential
+              </span>
+              <span className="block mt-4 text-white">
+                Start with a Free Consultation
               </span>
             </h2>
+          
             
             <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-              Our complimentary AI Opportunity Consultation is designed to reveal the untapped potential 
-              in your business. We'll identify specific areas where AI can make the biggest impact on your operations.
+              Our <span className="font-bold text-cyan-400">complimentary AI Opportunity Consultation</span> is designed to reveal your business's untapped potential. We'll pinpoint exactly where AI can make the biggest, most measurable impact on your operations.
             </p>
             
             <div className="space-y-4 mb-8">
