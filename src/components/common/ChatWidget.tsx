@@ -307,8 +307,8 @@ const ChatWidget: React.FC = () => {
 
   const conversationStarters: ConversationStarter[] = [
     {
-      displayText: "Message Reid",
-      submitText: "I'd like to send a message to Reid, please."
+      displayText: "Message our Experts",
+      submitText: "I'd like to send a message, please."
     },
     {
       displayText: "Automate Business Tasks",
@@ -321,7 +321,7 @@ const ChatWidget: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-10rem)] max-h-[700px] bg-slate-800/70 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700 overflow-hidden">
+    <div className="flex flex-col h-full bg-slate-800/70 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700 overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b border-slate-700"> {/* Increased padding for header */}
         <h3 className="flex items-center text-xl font-bold bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent"> {/* Adjusted size for balance */}

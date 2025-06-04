@@ -2,8 +2,8 @@ from flask import request, jsonify
 from flask_cors import CORS # For Cross-Origin Resource Sharing
 from flask_limiter import Limiter # For rate limiting
 from flask_limiter.util import get_remote_address # For rate limiting
-from api import app
-from api.utils.deepseek import call_deepseek_api, extract_assistant_response # Corrected import
+from api import app, limiter  # Import app and limiter from __init__.py
+from api.utils.grok import call_grok_api, extract_assistant_response  # Updated import
 from api.utils.n8n_handler import send_chat_lead_to_n8n # Import the new function
 # We will ignore the n8n import and related functions for now
 # from api.utils.n8n import send_lead_to_n8n, validate_lead_data 
@@ -71,122 +71,52 @@ def parse_lead_details(text: str) -> dict:
     return details
 
 @app.route('/api/chatbot', methods=['POST'])
-@limiter.limit("10 per minute") # Apply rate limit to this endpoint
-def chatbot():
-    data = request.json
-    
-    if not data or 'message' not in data or not isinstance(data['message'], str):
-        logger.error("Chatbot request failed: No message provided or message is not a string.")
-        return jsonify({"error": "Message is required and must be a string."}), 400
-    
-    # ANALYTICS: Log that a message is being processed
-    logger.info("ANALYTICS: MessageProcessed")
-
-    user_message_sanitized = html.escape(data['message']) # Sanitize for general processing
-    
-    conversation_history = data.get('conversation_history', [])
-
-    if not is_valid_conversation_history(conversation_history):
-        logger.error("Chatbot request failed: Invalid conversation history format.")
-        return jsonify({"error": "Invalid conversation_history format."}), 400
-
-    logger.info(f"Received message: {data['message']} (Sanitized: {user_message_sanitized})")
-    logger.info(f"Conversation history: {conversation_history}")
-
-    # Regular chat flow
-    api_response_data = call_deepseek_api(user_message_sanitized, conversation_history)
-    logger.info(f"RAW DEEPSEEK API RESPONSE: {json.dumps(api_response_data)}")
-    
-    if api_response_data.get('error'):
-        logger.error(f"Error from DeepSeek API: {api_response_data.get('error')}")
-        return jsonify({"error": "Sorry, I'm having trouble connecting to my brain right now."}), 500
-    
-    assistant_response_content = extract_assistant_response(api_response_data)
-    
-    if not assistant_response_content:
-        logger.error("Could not extract assistant response from DeepSeek API.")
-        return jsonify({"error": "Sorry, I couldn't generate a response."}), 500
-    
-    final_assistant_response_for_user = assistant_response_content # Default to full response
-
-    # Check for lead capture marker
-    lead_capture_marker = "[LEAD_INFO_COLLECTED]"
-    if lead_capture_marker in assistant_response_content:
-        logger.info("Lead capture marker detected in assistant response.")
+@limiter.limit("5 per minute")  # Rate limiting to prevent abuse
+def chat():
+    try:
+        data = request.get_json()
         
-        # The AI is instructed to provide its conversational response *before* the marker on a new line.
-        # So, the user-facing part is everything before the marker.
-        user_facing_part = assistant_response_content.split(lead_capture_marker, 1)[0].strip()
-        
-        if user_facing_part:
-            final_assistant_response_for_user = user_facing_part
-            logger.info(f"Using content before marker for user: '{final_assistant_response_for_user}'")
-        else:
-            # This is a fallback if the AI unexpectedly puts the marker at the very start
-            # or if the content before is just whitespace. We try to give a generic confirmation.
-            final_assistant_response_for_user = "Thanks! I've noted your information and Reid will be in touch."
-            logger.warning(f"No significant user-facing content found before marker. Using generic fallback: '{final_assistant_response_for_user}'")
-
-        # Parsing lead details (existing logic, ensure it targets the content *after* the marker)
-        parsed_details = {}
-        try:
-            # Ensure payload_str for parsing is *only* the content of the marker line
-            marker_content_line = assistant_response_content.split(lead_capture_marker, 1)[1].strip()
+        if not data or 'message' not in data:
+            return jsonify({"error": "No message provided"}), 400
             
-            # More robust regex to capture fields, especially multi-part messages
-            # This regex tries to capture known fields and then takes everything for Message
-            # It makes LastName and Phone optional in the capture group
-            lead_pattern = re.compile(
-                r"FirstName: (?P<FirstName>[^,]+)(?:,\s*LastName: (?P<LastName>[^,]+))?,\s*Email: (?P<Email>[^,]+)(?:,\s*Phone: (?P<Phone>[^,]+))?,\s*Message: (?P<Message>.+)"
-            )
-            match = lead_pattern.search(marker_content_line)
-
-            if match:
-                parsed_details = {k: v.strip() if v else "N/A" for k, v in match.groupdict().items()}
-            else:
-                # Fallback to simpler split if regex fails, though this is less robust for messages with commas
-                logger.warning(f"Complex regex failed for lead parsing on: {marker_content_line}. Falling back to simple split.")
-                parts = marker_content_line.split(", ") 
-                for part in parts:
-                    if ":" in part:
-                        key, value = part.split(":", 1)
-                        raw_key = key.strip()
-                        # Standardize key (existing logic)
-                        if raw_key.lower() == "firstname": standardized_key = "FirstName"
-                        elif raw_key.lower() == "lastname": standardized_key = "LastName"
-                        elif raw_key.lower() == "email": standardized_key = "Email"
-                        elif raw_key.lower() == "phone": standardized_key = "Phone"
-                        elif raw_key.lower() == "message": standardized_key = "Message"
-                        else: standardized_key = raw_key.capitalize()
-                        parsed_details[standardized_key] = value.strip()
-            
-            logger.info(f"Parsed lead details from marker: {parsed_details}")
-
-            # Validate essential fields for n8n after parsing
-            if not parsed_details.get("Email") and not parsed_details.get("Message") and not parsed_details.get("FirstName"):
-                 logger.warning("Lead capture attempted but critical info (FirstName, Email, Message) might be missing.")
+        user_message = data.get('message', '').strip()
+        conversation_history = data.get('conversation_history', [])
         
-        except Exception as e:
-            logger.error(f"Error parsing lead details from AI response marker: {e}. Marker content was: '{assistant_response_content.split(lead_capture_marker, 1)[1] if lead_capture_marker in assistant_response_content else assistant_response_content}'")
-            parsed_details = {"Message": f"AI tried to capture lead. Full AI response: {assistant_response_content}", "InquiryType": "AI Chat Lead (Parsing Error)"}
-
-        # Ensure minimum required fields exist for n8n, even if empty, to avoid key errors in n8n_handler
-        # The n8n_handler itself expects FirstName, Email, Message as per its docstring, others are optional.
-        for key in ["FirstName", "LastName", "Email", "Phone", "Message"]:
-            if key not in parsed_details:
-                 parsed_details[key] = "N/A" # Or empty string, depending on how n8n handles it
-        
-        if send_chat_lead_to_n8n(parsed_details):
-            logger.info("Successfully sent lead to n8n.")
-        else:
-            logger.error("Failed to send lead to n8n.")
-            # If n8n fails, the user still sees the AI's conversational confirmation.
-            # Consider adding a subtle hint in final_assistant_response_for_user if critical.
+        # Validate conversation history
+        if not is_valid_conversation_history(conversation_history):
+            return jsonify({"error": "Invalid conversation history format"}), 400
             
-    logger.info(f"Sending final assistant response to user: {final_assistant_response_for_user}")
-    return jsonify({
-        "response": final_assistant_response_for_user
-    })
+        # Call Grok API
+        response = call_grok_api(user_message, conversation_history)
+        
+        # Extract and process the response
+        assistant_response = extract_assistant_response(response)
+        
+        # Check for lead collection marker and handle accordingly
+        if '[LEAD_INFO_COLLECTED]' in assistant_response:
+            try:
+                # Extract lead information
+                lead_info = re.search(r'\[LEAD_INFO_COLLECTED\](.*?)(?=\n|$)', assistant_response)
+                if lead_info:
+                    # Remove the marker from the response
+                    assistant_response = assistant_response.replace(lead_info.group(0), '').strip()
+                    # Send lead to n8n
+                    send_chat_lead_to_n8n(lead_info.group(1))
+            except Exception as e:
+                logger.error(f"Error processing lead information: {e}")
+                # Continue with the response even if lead processing fails
+        
+        return jsonify({
+            "response": assistant_response,
+            "conversation_history": conversation_history + [
+                {"role": "user", "content": user_message},
+                {"role": "assistant", "content": assistant_response}
+            ]
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in chat endpoint: {e}")
+        return jsonify({"error": "An error occurred processing your request"}), 500
 
 @app.route('/api/chatbot/greeting', methods=['GET'])
 @limiter.limit("30 per minute") # Apply a slightly more relaxed limit for greetings

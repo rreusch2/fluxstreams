@@ -22,8 +22,8 @@ function CameraControls() {
   
   useFrame(() => {
     // Subtle camera movement based on mouse position
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mousePosition.current.x * 2, 0.02);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mousePosition.current.y * 1, 0.02);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mousePosition.current.x * 1.5, 0.02);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mousePosition.current.y * 0.8, 0.02);
     camera.lookAt(0, 0, 0);
   });
   
@@ -42,12 +42,12 @@ function FloatingShape({ position, geometry, color, speed = 1 }: {
   useFrame((state) => {
     if (meshRef.current) {
       // Gentle rotation
-      meshRef.current.rotation.x += 0.005 * speed;
-      meshRef.current.rotation.y += 0.003 * speed;
+      meshRef.current.rotation.x += 0.008 * speed;
+      meshRef.current.rotation.y += 0.005 * speed;
       
       // Subtle floating movement
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.2;
-      meshRef.current.position.x = position[0] + Math.cos(state.clock.elapsedTime * speed * 0.5) * 0.1;
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.3;
+      meshRef.current.position.x = position[0] + Math.cos(state.clock.elapsedTime * speed * 0.5) * 0.2;
     }
   });
 
@@ -55,10 +55,10 @@ function FloatingShape({ position, geometry, color, speed = 1 }: {
     <meshStandardMaterial
       color={color}
       transparent
-      opacity={0.7}
+      opacity={0.8}
       emissive={color}
-      emissiveIntensity={0.15}
-      roughness={0.2}
+      emissiveIntensity={0.2}
+      roughness={0.1}
       metalness={0.9}
     />
   );
@@ -73,25 +73,25 @@ function FloatingShape({ position, geometry, color, speed = 1 }: {
   switch (geometry) {
     case 'sphere':
       return (
-        <Sphere {...shapeProps} args={[0.4, 32, 32]}>
+        <Sphere {...shapeProps} args={[0.5, 32, 32]}>
           {material}
         </Sphere>
       );
     case 'box':
       return (
-        <Box {...shapeProps} args={[0.6, 0.6, 0.6]}>
+        <Box {...shapeProps} args={[0.8, 0.8, 0.8]}>
           {material}
         </Box>
       );
     case 'octahedron':
       return (
-        <Octahedron {...shapeProps} args={[0.5]}>
+        <Octahedron {...shapeProps} args={[0.6]}>
           {material}
         </Octahedron>
       );
     case 'torus':
       return (
-        <Torus {...shapeProps} args={[0.5, 0.15, 16, 32]}>
+        <Torus {...shapeProps} args={[0.6, 0.2, 16, 32]}>
           {material}
         </Torus>
       );
@@ -107,16 +107,16 @@ function Scene() {
     const geometries: Array<'sphere' | 'box' | 'octahedron' | 'torus'> = ['sphere', 'box', 'octahedron', 'torus'];
     const colors = ['#06b6d4', '#818cf8', '#6366f1', '#8b5cf6', '#14b8a6', '#22d3ee']; // Cyan and purple variations
     
-    return Array.from({ length: 15 }, (_, i) => ({
+    return Array.from({ length: 18 }, (_, i) => ({
       id: i,
       position: [
-        (Math.random() - 0.5) * 24, // x: -12 to 12
-        (Math.random() - 0.5) * 12, // y: -6 to 6
-        (Math.random() - 0.5) * 18  // z: -9 to 9
+        (Math.random() - 0.5) * 20, // x: -10 to 10
+        (Math.random() - 0.5) * 10, // y: -5 to 5
+        (Math.random() - 0.5) * 15  // z: -7.5 to 7.5
       ] as [number, number, number],
       geometry: geometries[Math.floor(Math.random() * geometries.length)],
       color: colors[Math.floor(Math.random() * colors.length)],
-      speed: 0.3 + Math.random() * 1.2 // Random speed between 0.3 and 1.5
+      speed: 0.4 + Math.random() * 1.0 // Random speed between 0.4 and 1.4
     }));
   }, []);
 
@@ -126,12 +126,12 @@ function Scene() {
       <CameraControls />
       
       {/* Ambient lighting */}
-      <ambientLight intensity={0.3} />
+      <ambientLight intensity={0.4} />
       
       {/* Main directional light */}
       <directionalLight
         position={[10, 10, 5]}
-        intensity={0.8}
+        intensity={1.2}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -143,15 +143,15 @@ function Scene() {
       />
       
       {/* Accent lights */}
-      <pointLight position={[-10, -10, -5]} intensity={0.4} color="#06b6d4" />
-      <pointLight position={[10, -5, 8]} intensity={0.3} color="#8b5cf6" />
+      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#06b6d4" />
+      <pointLight position={[10, -5, 8]} intensity={0.4} color="#8b5cf6" />
       
       {/* Render floating shapes */}
       {shapes.map((shape) => (
         <Float
           key={shape.id}
           speed={shape.speed}
-          rotationIntensity={0.4}
+          rotationIntensity={0.3}
           floatIntensity={0.2}
         >
           <FloatingShape
@@ -169,11 +169,11 @@ function Scene() {
 // Main Three.js background component
 const ThreeBackground: React.FC = () => {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <Canvas
         camera={{ 
-          position: [0, 0, 10], 
-          fov: 50,
+          position: [0, 0, 8], 
+          fov: 60,
           near: 0.1,
           far: 100
         }}
@@ -181,7 +181,16 @@ const ThreeBackground: React.FC = () => {
         dpr={[1, 2]}
         performance={{ min: 0.5 }}
         style={{ 
-          background: 'transparent'
+          background: 'transparent',
+          width: '100%',
+          height: '100%'
+        }}
+        onCreated={({ gl }) => {
+          console.log('Three.js Beautiful Background loaded successfully!');
+          gl.setClearColor(0x000000, 0); // Transparent background
+        }}
+        onError={(error) => {
+          console.error('Three.js error:', error);
         }}
       >
         <Scene />

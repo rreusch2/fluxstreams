@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import FloatingChat from './components/common/FloatingChat';
 import HomePage from './pages/HomePage';
 import ContactPage from './pages/ContactPage';
 
@@ -31,6 +32,9 @@ function App() {
       </main>
       
       <Footer navigateTo={navigateTo} />
+      
+      {/* Floating Chat - Available on all pages */}
+      <FloatingChat />
     </div>
   );
 }
