@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AlignJustify, X, Cpu } from 'lucide-react';
+import { AlignJustify, X } from 'lucide-react';
 
 interface NavbarProps {
   currentPage: string;
@@ -45,7 +45,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, navigateTo }) => {
               onClick={() => handleNavigation('home')}
               className="flex items-center text-white font-bold text-2xl md:text-3xl"
             >
-              <Cpu className="h-8 w-8 md:h-9 md:w-9 mr-3 text-teal-400" />
+              <img 
+                src="/favicon/favicon.svg" 
+                alt="Fluxstream Logo" 
+                className="h-8 w-8 md:h-9 md:w-9 mr-3"
+              />
               <span className="bg-gradient-to-r from-teal-400 to-indigo-500 bg-clip-text text-transparent font-semibold font-['Ancizar Sans'] text-3xl md:text-4xl">
                 Fluxstream
               </span>
