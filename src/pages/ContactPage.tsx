@@ -22,8 +22,8 @@ const ContactPage: React.FC = () => {
     {
       icon: <Mail className="h-5 w-5 text-teal-400" />,
       title: 'Email',
-      content: 'info@reuschai.com',
-      link: 'mailto:info@reuschai.com'
+      content: 'info@fluxstreamai.com',
+      link: 'mailto:info@fluxstreamai.com'
     },
     {
       icon: <Phone className="h-5 w-5 text-teal-400" />,

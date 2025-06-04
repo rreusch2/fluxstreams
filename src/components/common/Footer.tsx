@@ -59,7 +59,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <address className="not-italic text-sm text-slate-300 space-y-2">
               <p>Reid Reusch</p>
-              <p>info@reuschai.com</p>
+              <p>info@fluxstreamai.com</p>
               <p>(270) 724-2404</p>
             </address>
           </div>

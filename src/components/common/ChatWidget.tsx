@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Removed useRef
+import React, { useState, useEffect, useRef } from 'react';
 import MessageList from './MessageList';
 import InputArea from './InputArea';
 // TypingIndicator will now be passed to MessageList if you want it inside the scrollable area
@@ -28,6 +28,8 @@ const ChatWidget: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showQuickPrompts, setShowQuickPrompts] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   // REMOVED: leadCaptureMode and leadData states, as the new form handles this directly.
   // const [leadCaptureMode, setLeadCaptureMode] = useState(false);
   // const [leadData, setLeadData] = useState<Record<string, string>>({});
@@ -307,7 +309,7 @@ const ChatWidget: React.FC = () => {
 
   const conversationStarters: ConversationStarter[] = [
     {
-      displayText: "Message our Experts",
+      displayText: "Message Our Experts",
       submitText: "I'd like to send a message, please."
     },
     {
@@ -320,59 +322,105 @@ const ChatWidget: React.FC = () => {
     }
   ];
 
+  const handleQuickPrompt = async (prompt: string) => {
+    setInput(prompt);
+    setShowQuickPrompts(false);
+    await handleSubmit(({ preventDefault: () => {} } as unknown) as React.FormEvent, prompt);
+  };
+
   return (
     <div className="flex flex-col h-full bg-slate-800/70 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700 overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-slate-700"> {/* Increased padding for header */}
-        <h3 className="flex items-center text-xl font-bold bg-gradient-to-r from-teal-400 to-indigo-400 bg-clip-text text-transparent"> {/* Adjusted size for balance */}
-          <MessageSquare size={24} className="mr-3 text-teal-400 flex-shrink-0" /> {/* Slightly larger icon */}
-          <span>Otto</span>
-        </h3>
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 min-h-0">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              message.role === 'assistant' ? 'justify-start' : 'justify-end'
+            }`}
+          >
+            <div
+              className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-4 py-2.5 ${
+                message.role === 'assistant'
+                  ? 'bg-slate-700/50 text-white'
+                  : 'bg-gradient-to-r from-cyan-500 to-teal-500 text-white'
+              }`}
+            >
+              <div className="prose prose-sm md:prose-base prose-invert">
+                {message.content}
+              </div>
+            </div>
+          </div>
+        ))}
+        {isTyping && (
+          <div className="flex justify-start">
+            <div className="bg-slate-700/50 rounded-2xl px-4 py-2.5 max-w-[85%] md:max-w-[75%]">
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Messages Area - Pass isTyping prop to MessageList */}
-      {/* The MessageList component will need to be updated to render the form when message.isForm is true */}
-      <MessageList 
-        messages={messages} 
-        isTyping={isTyping}
-        // Pass form-related props
-        isContactFormActive={isContactFormActive}
-        contactFormFields={contactFormFields}
-        handleFormFieldChange={handleFormFieldChange}
-        handleContactFormSubmit={handleContactFormSubmit}
-      /> 
-      
-      {/* Conversation Starters (conditionally rendered) */}
-      {/* Logic: Show if the initial greeting has been sent and there are few messages, implying it's early in the conversation. */}
-      {messages.length > 0 && messages.length < 4 && !isTyping && !isContactFormActive && (
-         <div className="p-3 border-t border-slate-700">
-           <div className="flex flex-wrap justify-center gap-2"> {/* Centered starters */}
-             {conversationStarters.map((starter, index) => (
-               <button 
-                 key={index}
-                 onClick={() => handleConversationStarterClick(starter)}
-                 className="px-3 py-1.5 text-sm bg-slate-700 hover:bg-teal-600 text-slate-200 hover:text-white rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-               >
-                 {starter.displayText}
-               </button>
-             ))}
-           </div>
-         </div>
+      {/* Quick Prompts */}
+      {showQuickPrompts && (
+        <div className="p-4 border-t border-slate-700 bg-slate-800/50">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <button
+              onClick={() => handleQuickPrompt("Tell me more about how AI can automate business tasks.")}
+              className="text-sm md:text-base text-left px-4 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-colors"
+            >
+              How can AI automate tasks?
+            </button>
+            <button
+              onClick={() => handleQuickPrompt("Can you give me more information about the free AI consultation you offer?")}
+              className="text-sm md:text-base text-left px-4 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-colors"
+            >
+              Free AI consultation?
+            </button>
+            <button
+              onClick={() => handleQuickPrompt("What industries do you typically work with?")}
+              className="text-sm md:text-base text-left px-4 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-colors"
+            >
+              Industries you work with?
+            </button>
+            <button
+              onClick={() => handleQuickPrompt("I'd like to schedule a call with your team.")}
+              className="text-sm md:text-base text-left px-4 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-colors"
+            >
+              Schedule a call
+            </button>
+          </div>
+        </div>
       )}
 
-      {/* Input Area or Contact Form Placeholder */}
-      {/* The actual form rendering will be handled by MessageList based on message.isForm */}
-      {!isContactFormActive ? (
-        <InputArea
-          input={input}
-          setInput={setInput}
-          handleSubmit={handleSubmit}
-          isTyping={isTyping} 
-        />
-      ) : (
-        // When contact form is active, MessageList handles rendering it, so no separate InputArea here.
-        null 
-      )}
+      {/* Input Area */}
+      <div className="p-4 border-t border-slate-700 bg-slate-800/50">
+        <form onSubmit={handleSubmit} className="flex space-x-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 bg-slate-700/50 text-white placeholder-slate-400 rounded-lg px-4 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <button
+            type="submit"
+            disabled={isTyping || !input.trim()}
+            className={`px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-medium text-sm md:text-base transition-all ${
+              isTyping || !input.trim()
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:shadow-lg hover:shadow-cyan-500/25'
+            }`}
+          >
+            Send
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
