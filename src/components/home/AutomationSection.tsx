@@ -65,19 +65,22 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
       {/* Main AI Solutions Section */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" ref={ref}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <motion.div 
-            className="mb-16 text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              AI Solutions For <span className="bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">Everyone</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              We create custom AI systems for businesses of all sizes, startups, and individuals looking to leverage AI technology.
-            </p>
-          </motion.div>
+                     <motion.div 
+             className="mb-16 text-center"
+             initial={{ opacity: 0, y: 30 }}
+             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+             transition={{ duration: 0.6, ease: "easeOut" }}
+           >
+             <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+               Our Custom AI Solutions: Built For Your <span className="bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">Success</span>
+             </h2>
+             <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+               Following your AI Opportunity Consultation, we design and build bespoke AI automations and intelligent workflows tailored to your unique business challenges and goals.
+             </p>
+             <p className="text-lg text-slate-500 max-w-3xl mx-auto mt-4 font-medium">
+               Here are some ways we can transform your operations:
+             </p>
+           </motion.div>
           
           {/* What We Offer Section */}
           <motion.div 
@@ -87,7 +90,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
             animate={isInView ? "visible" : "hidden"}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                             {/* AI Education & Strategy */}
+                                            {/* Intelligent Automation & Workflow Design */}
                <motion.div 
                  className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 hover:shadow-2xl transition-all duration-300 group"
                  variants={cardVariants}
@@ -96,68 +99,75 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
                    y: -5,
                    transition: { type: "spring", stiffness: 300, damping: 20 }
                  }}
-              >
-                <motion.div 
-                  className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
-                  variants={iconVariants}
-                  whileHover="hover"
-                >
-                  <Lightbulb className="h-7 w-7 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-indigo-600 transition-colors">AI Education & Strategy</h3>
-                <p className="text-slate-600 mb-6 text-lg leading-relaxed">
-                  New to AI? We'll help you understand what's possible and develop a roadmap tailored to your unique needs, whether you're an individual, startup, or established organization.
-                </p>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    'Personalized AI consultations',
-                    'AI opportunity assessment', 
-                    'Implementation roadmap'
-                  ].map((item, index) => (
-                    <motion.li 
-                      key={index}
-                      className="flex items-start"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                      transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
-                    >
-                      <motion.span 
-                        className="h-5 w-5 text-teal-500 mr-3 mt-0.5"
-                        whileHover={{ scale: 1.2 }}
-                      >✓</motion.span>
-                      <span className="text-slate-700 text-lg">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
+               >
+                 <motion.div 
+                   className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
+                   variants={iconVariants}
+                   whileHover="hover"
+                 >
+                   <Webhook className="h-7 w-7 text-white" />
+                 </motion.div>
+                 <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-purple-600 transition-colors">Intelligent Automation & Workflow Design</h3>
+                 <p className="text-slate-600 mb-6 text-lg leading-relaxed">
+                   Connect your existing tools and automate repetitive tasks with smart, adaptive workflows that learn and improve, saving countless hours and reducing errors.
+                 </p>
+                 <ul className="space-y-3 mb-6">
+                   {[
+                     'Custom automation pipelines',
+                     'Cross-platform integration', 
+                     'Adaptive learning systems',
+                     'ROI tracking & optimization'
+                   ].map((item, index) => (
+                     <motion.li 
+                       key={index}
+                       className="flex items-start"
+                       initial={{ opacity: 0, x: -10 }}
+                       animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                       transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
+                     >
+                       <motion.span 
+                         className="h-5 w-5 text-teal-500 mr-3 mt-0.5"
+                         whileHover={{ scale: 1.2 }}
+                       >✓</motion.span>
+                       <span className="text-slate-700 text-lg">{item}</span>
+                     </motion.li>
+                   ))}
+                 </ul>
+               </motion.div>
               
                              {/* Custom AI Assistants */}
-               <motion.div 
-                 className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 hover:shadow-2xl transition-all duration-300 group"
+                              <motion.div 
+                 className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 hover:shadow-2xl transition-all duration-300 group relative"
                  variants={cardVariants}
                  whileHover={{
                    scale: 1.05,
                    y: -5,
                    transition: { type: "spring", stiffness: 300, damping: 20 }
                  }}
-              >
-                <motion.div 
-                  className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
-                  variants={iconVariants}
-                  whileHover="hover"
-                >
-                  <Bot className="h-7 w-7 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-teal-600 transition-colors">Custom AI Assistants</h3>
-                <p className="text-slate-600 mb-6 text-lg leading-relaxed">
-                  We build intelligent assistants that can handle customer support, automate workflows, process documents, and integrate with your existing systems.
-                </p>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    '24/7 customer support',
-                    'Seamless system integration',
-                    'Data-driven insights'
-                  ].map((item, index) => (
+               >
+                 {/* Popular Badge */}
+                 <div className="absolute -top-3 right-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                   Most Popular
+                 </div>
+                 
+                 <motion.div 
+                   className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
+                   variants={iconVariants}
+                   whileHover="hover"
+                 >
+                   <Bot className="h-7 w-7 text-white" />
+                 </motion.div>
+                                 <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-teal-600 transition-colors">Custom AI Assistant Development</h3>
+                 <p className="text-slate-600 mb-6 text-lg leading-relaxed">
+                   Deploy powerful AI assistants capable of enhancing customer support, automating internal processes, processing documents, and seamlessly integrating with your current systems.
+                 </p>
+                 <ul className="space-y-3 mb-6">
+                   {[
+                     '24/7 AI-powered support',
+                     'Secure system integration',
+                     'Data-driven insights & analytics',
+                     'Custom training & optimization'
+                   ].map((item, index) => (
                     <motion.li 
                       key={index}
                       className="flex items-start"
@@ -175,7 +185,7 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
                 </ul>
               </motion.div>
               
-                             {/* Intelligent Workflows */}
+                                            {/* AI Strategy & Implementation Partnerships */}
                <motion.div 
                  className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 hover:shadow-2xl transition-all duration-300 group"
                  variants={cardVariants}
@@ -184,40 +194,40 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
                    y: -5,
                    transition: { type: "spring", stiffness: 300, damping: 20 }
                  }}
-              >
-                <motion.div 
-                  className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
-                  variants={iconVariants}
-                  whileHover="hover"
-                >
-                  <Webhook className="h-7 w-7 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-purple-600 transition-colors">Intelligent Workflows</h3>
-                <p className="text-slate-600 mb-6 text-lg leading-relaxed">
-                  Connect your tools and automate repetitive tasks with smart workflows that learn and improve over time, saving hours of manual work.
-                </p>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    'Custom automation pipelines',
-                    'Cross-platform integration',
-                    'Adaptive learning systems'
-                  ].map((item, index) => (
-                    <motion.li 
-                      key={index}
-                      className="flex items-start"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                      transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
-                    >
-                      <motion.span 
-                        className="h-5 w-5 text-teal-500 mr-3 mt-0.5"
-                        whileHover={{ scale: 1.2 }}
-                      >✓</motion.span>
-                      <span className="text-slate-700 text-lg">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
+               >
+                 <motion.div 
+                   className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl mb-6 flex items-center justify-center shadow-lg"
+                   variants={iconVariants}
+                   whileHover="hover"
+                 >
+                   <Lightbulb className="h-7 w-7 text-white" />
+                 </motion.div>
+                 <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-indigo-600 transition-colors">AI Strategy & Implementation Partnerships</h3>
+                 <p className="text-slate-600 mb-6 text-lg leading-relaxed">
+                   For organizations new to AI, we provide tailored guidance, develop comprehensive roadmaps, and partner with you through the entire implementation journey to ensure measurable ROI.
+                 </p>
+                 <ul className="space-y-3 mb-6">
+                   {[
+                     'Strategic AI roadmap development',
+                     'Technology stack recommendations',
+                     'Phased implementation plans'
+                   ].map((item, index) => (
+                     <motion.li 
+                       key={index}
+                       className="flex items-start"
+                       initial={{ opacity: 0, x: -10 }}
+                       animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                       transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
+                     >
+                       <motion.span 
+                         className="h-5 w-5 text-teal-500 mr-3 mt-0.5"
+                         whileHover={{ scale: 1.2 }}
+                       >✓</motion.span>
+                       <span className="text-slate-700 text-lg">{item}</span>
+                     </motion.li>
+                   ))}
+                 </ul>
+               </motion.div>
             </div>
           </motion.div>
         </div>
@@ -400,37 +410,37 @@ const AutomationSection: React.FC<AutomationSectionProps> = ({ navigateTo }) => 
             initial="hidden"
             animate={ctaInView ? "visible" : "hidden"}
           >
-            <motion.h3 
-              className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight"
-              variants={cardVariants}
-            >
-              Ready to explore what AI can do for{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">you?</span>
-            </motion.h3>
-            <motion.p 
-              className="text-slate-300 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed"
-              variants={cardVariants}
-            >
-              Let's discuss your goals and discover how custom AI solutions can help you achieve them.
-            </motion.p>
-            <motion.div variants={cardVariants}>
-              <Button 
-                variant="primary" 
-                size="lg" 
-                onClick={() => navigateTo('contact')}
-                pulse={true}
-                className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white font-semibold shadow-xl hover:shadow-cyan-500/25 py-4 px-8 text-lg group"
-              >
-                Schedule a Free Consultation
-                <motion.div
-                  className="ml-2 inline-block"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.div>
-              </Button>
-            </motion.div>
+                         <motion.h3 
+               className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight"
+               variants={cardVariants}
+             >
+               Ready to build{' '}
+               <span className="bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">smarter solutions?</span>
+             </motion.h3>
+             <motion.p 
+               className="text-slate-300 text-xl md:text-2xl max-w-3xl mx-auto mb-10 leading-relaxed"
+               variants={cardVariants}
+             >
+               Let's discuss your automation project and transform your operations with custom AI solutions.
+             </motion.p>
+             <motion.div variants={cardVariants}>
+               <Button 
+                 variant="primary" 
+                 size="lg" 
+                 onClick={() => navigateTo('contact')}
+                 pulse={true}
+                 className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white font-semibold shadow-xl hover:shadow-cyan-500/25 py-4 px-8 text-lg group"
+               >
+                 Discuss Your Automation Project
+                 <motion.div
+                   className="ml-2 inline-block"
+                   animate={{ x: [0, 5, 0] }}
+                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                 >
+                   <ArrowRight className="h-5 w-5" />
+                 </motion.div>
+               </Button>
+             </motion.div>
           </motion.div>
         </div>
       </section>
