@@ -5,6 +5,9 @@ import ChatWidget from './ChatWidget';
 const FloatingChat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPeeking, setIsPeeking] = useState(false);
+  const [peekType, setPeekType] = useState<'curious' | 'wave' | 'blink'>('curious');
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Handle window resize for responsive behavior
   useEffect(() => {
@@ -17,13 +20,155 @@ const FloatingChat: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Peek animation logic
+  useEffect(() => {
+    if (isOpen || hasUserInteracted) return;
+
+    // First peek after initial load (TESTING: 3-5 seconds)
+    const initialPeekTimer = setTimeout(() => {
+      triggerPeek();
+    }, Math.random() * 2000 + 3000); // 3-5 seconds for testing
+
+    // Subsequent peeks every 15-30 seconds (TESTING: much more frequent)
+    const peekInterval = setInterval(() => {
+      if (!isOpen && !hasUserInteracted) {
+        triggerPeek();
+      }
+    }, Math.random() * 15000 + 15000); // 15-30 seconds for testing
+
+    return () => {
+      clearTimeout(initialPeekTimer);
+      clearInterval(peekInterval);
+    };
+  }, [isOpen, hasUserInteracted]);
+
+  const triggerPeek = () => {
+    const peekTypes: Array<'curious' | 'wave'> = ['curious', 'wave'];
+    const randomPeek = peekTypes[Math.floor(Math.random() * peekTypes.length)];
+    
+    setPeekType(randomPeek);
+    setIsPeeking(true);
+    
+    // Duration based on peek type
+    const duration = randomPeek === 'wave' ? 3000 : 2500;
+    
+    setTimeout(() => {
+      setIsPeeking(false);
+    }, duration);
+  };
+
   const toggleChat = () => {
     setIsOpen(!isOpen);
+    setHasUserInteracted(true); // Stop peeking once user interacts
+    setIsPeeking(false); // Hide peek if currently peeking
+    
     // Prevent body scroll when chat is open on mobile
     if (isMobile) {
       document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
     }
   };
+
+  // Flux AI Character Component
+  const FluxCharacter = () => (
+    <div 
+      className={`absolute transition-all duration-700 ease-out pointer-events-none ${
+        isPeeking 
+          ? '-top-3 opacity-100 transform translate-y-0' 
+          : '-top-7 opacity-0 transform translate-y-4'
+      }`}
+      style={{ 
+        right: '8px',
+        zIndex: 60
+      }}
+    >
+      {/* Flux Robot - Only showing top part peeking over */}
+      <div className="relative">
+        {/* Robot Head - Only top portion visible */}
+        <div className="w-10 h-5 bg-gradient-to-br from-purple-500 via-indigo-500 to-purple-600 rounded-t-lg border-t-2 border-l-2 border-r-2 border-white shadow-xl relative overflow-hidden">
+          {/* Head highlights and details */}
+          <div className="absolute inset-0">
+            {/* Top highlight */}
+            <div className="absolute top-0.5 left-1 right-1 h-1 bg-white/25 rounded-sm"></div>
+            
+            {/* Side panels */}
+            <div className="absolute left-0.5 top-0.5 bottom-0 w-0.5 bg-white/30 rounded-full"></div>
+            <div className="absolute right-0.5 top-0.5 bottom-0 w-0.5 bg-white/30 rounded-full"></div>
+            
+            {/* Eyes - positioned higher since we're only showing top */}
+            <div className="absolute top-1.5 left-1/2 transform -translate-x-1/2">
+              <div className="flex space-x-2">
+                {/* Left Eye */}
+                <div className="w-1.5 h-1.5 bg-white rounded-full shadow-inner relative">
+                  {/* Eye pupils for more character */}
+                  <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-slate-700 rounded-full"></div>
+                </div>
+                {/* Right Eye */}
+                <div className="w-1.5 h-1.5 bg-white rounded-full shadow-inner relative">
+                  {/* Eye pupils for more character */}
+                  <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-slate-700 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Circuit patterns on forehead */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-1 left-2 w-2 h-0.5 bg-white rounded-full"></div>
+              <div className="absolute top-1 right-2 w-2 h-0.5 bg-white rounded-full"></div>
+              <div className="absolute top-0.5 left-1/2 transform -translate-x-1/2 w-3 h-0.5 bg-white rounded-full"></div>
+            </div>
+            
+            {/* Antenna/sensor peeking over */}
+            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
+              <div className="w-0.5 h-1.5 bg-purple-300 rounded-full"></div>
+              <div className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-purple-200 rounded-full animate-pulse shadow-lg"></div>
+            </div>
+          </div>
+          
+          {/* Head tilt for curious animation */}
+          <div className={`absolute inset-0 transition-transform duration-700 ${
+            peekType === 'curious' && isPeeking ? 'rotate-3' : 'rotate-0'
+          }`}></div>
+        </div>
+
+        {/* Just hands grabbing the top edge of the bubble */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+          {/* Left hand grabbing bubble edge */}
+          <div className={`absolute -left-6 -top-0.5 transition-all duration-500 ${
+            isPeeking ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
+          }`}>
+            {/* Hand */}
+            <div className="w-2.5 h-2 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-md border border-white/50 relative">
+              {/* Thumb */}
+              <div className="absolute -left-0.5 top-0.5 w-0.5 h-1 bg-purple-300 rounded-full border border-white/30"></div>
+              {/* Fingers gripping */}
+              <div className="absolute -top-0.5 left-0.5 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+              <div className="absolute -top-0.5 left-1 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+              <div className="absolute -top-0.5 right-0.5 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+            </div>
+          </div>
+
+          {/* Right hand grabbing bubble edge */}
+          <div className={`absolute -right-6 -top-0.5 transition-all duration-500 ${
+            isPeeking ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
+          }`}>
+            {/* Hand */}
+            <div className="w-2.5 h-2 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-md border border-white/50 relative">
+              {/* Thumb */}
+              <div className="absolute -right-0.5 top-0.5 w-0.5 h-1 bg-purple-300 rounded-full border border-white/30"></div>
+              {/* Fingers gripping */}
+              <div className="absolute -top-0.5 left-0.5 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+              <div className="absolute -top-0.5 left-1 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+              <div className="absolute -top-0.5 right-0.5 w-0.5 h-0.5 bg-purple-300 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Wave animation removed for cleaner look */}
+      </div>
+      
+      {/* Speech bubble removed for now */}
+    </div>
+  );
 
   return (
     <>
@@ -35,14 +180,14 @@ const FloatingChat: React.FC = () => {
           aria-label="Open chat"
         >
           <div className="relative">
-            {/* Main chat bubble */}
-            <div className="bg-gradient-to-r from-cyan-500 to-teal-600 rounded-full p-3 md:p-4 shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-110">
-              <MessageCircle className="h-6 w-6 md:h-7 md:w-7 text-white" />
-            </div>
+            {/* Flux Character - Only show when not on mobile to avoid clutter */}
+            {!isMobile && <FluxCharacter />}
             
-            {/* Notification dot */}
-            <div className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
-              <div className="bg-red-500 rounded-full w-1.5 h-1.5 md:w-2 md:h-2 animate-pulse"></div>
+            {/* Main chat bubble */}
+            <div className={`bg-gradient-to-r from-cyan-500 to-teal-600 rounded-full p-3 md:p-4 shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-110 ${
+              isPeeking && !isMobile ? 'ring-2 ring-cyan-300 ring-opacity-50' : ''
+            }`}>
+              <MessageCircle className="h-6 w-6 md:h-7 md:w-7 text-white" />
             </div>
             
             {/* Hover tooltip - Hidden on mobile */}
